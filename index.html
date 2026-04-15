@@ -159,6 +159,21 @@
     cursor: pointer;
     transition: transform .15s ease;
     user-select: none;
+    -webkit-user-select: none;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    color: inherit;
+  }
+  /* aspect-ratio fallback for older Safari */
+  @supports not (aspect-ratio: 1 / 1) {
+    .tile::before {
+      content: "";
+      display: block;
+      padding-top: 100%;
+      grid-area: 1 / 1;
+    }
+    .tile > * { grid-area: 1 / 1; }
   }
   .tile:active { transform: scale(.97); }
 
