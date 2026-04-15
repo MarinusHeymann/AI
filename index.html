@@ -363,7 +363,37 @@
 
     <!-- Board -->
     <div class="board">
-      <div class="grid" id="grid"></div>
+      <div class="grid" id="grid">
+        <!-- Row 1 -->
+        <button type="button" class="tile" data-v="200"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">200</span></div></div></button>
+        <button type="button" class="tile" data-v="155"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">155</span></div></div></button>
+        <button type="button" class="tile" data-v="155"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">155</span></div></div></button>
+        <button type="button" class="tile" data-v="1000"><div class="coin shape-circle"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h15a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/><path d="M3 7V6a2 2 0 0 1 2-2h11"/><circle cx="16" cy="13" r="1.2"/></svg><div class="label"><span class="sym">Đ</span><span class="val">1,000</span></div></div></button>
+
+        <!-- Row 2 -->
+        <button type="button" class="tile" data-v="1000"><div class="coin shape-octagon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18l-2 10a2 2 0 0 1-2 1.6H7a2 2 0 0 1-2-1.6L3 9z"/><path d="M8 9l3-5"/><path d="M16 9l-3-5"/></svg><div class="label"><span class="sym">Đ</span><span class="val">1,000</span></div></div></button>
+        <button type="button" class="tile" data-v="250"><div class="coin shape-square"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M7 10l5 5 5-5"/></svg><div class="label"><span class="sym">Đ</span><span class="val">250</span></div></div></button>
+        <button type="button" class="tile" data-v="155"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">155</span></div></div></button>
+        <button type="button" class="tile" data-v="175"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">175</span></div></div></button>
+
+        <!-- Row 3 -->
+        <button type="button" class="tile" data-v="155"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">155</span></div></div></button>
+        <button type="button" class="tile" data-v="150"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">150</span></div></div></button>
+        <button type="button" class="tile" data-v="225"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">225</span></div></div></button>
+        <button type="button" class="tile" data-v="150"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">150</span></div></div></button>
+
+        <!-- Row 4 -->
+        <button type="button" class="tile" data-v="160"><div class="badge-emoji">&#128521;</div><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">160</span></div></div></button>
+        <button type="button" class="tile" data-v="100"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">100</span></div></div></button>
+        <button type="button" class="tile" data-v="583"><div class="coin shape-octagon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M4 13h10"/><path d="M4 21h10"/><path d="M14 8l3 3v7a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V9l-3-3"/></svg><div class="label"><span class="sym">Đ</span><span class="val">583</span></div></div></button>
+        <button type="button" class="tile" data-v="1000"><div class="coin shape-octagon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="8" width="10" height="13" rx="2"/><path d="M10 8V5h4v3"/><circle cx="17" cy="5" r="1"/><path d="M19 4l.8-.8"/><path d="M19 6h1.2"/><path d="M19 8l.8.8"/><path d="M17 3V1.8"/></svg><div class="label"><span class="sym">Đ</span><span class="val">1,000</span></div></div></button>
+
+        <!-- Row 5 -->
+        <button type="button" class="tile" data-v="175"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">175</span></div></div></button>
+        <button type="button" class="tile" data-v="150"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">150</span></div></div></button>
+        <button type="button" class="tile" data-v="500"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">500</span></div></div></button>
+        <button type="button" class="tile" data-v="150"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">150</span></div></div></button>
+      </div>
     </div>
 
     <button class="reset" id="resetBtn">Reset</button>
@@ -372,136 +402,62 @@
   <div class="toast" id="toast">You won Đ175!</div>
 
 <script>
-  // Tile definitions matching the screenshot layout (5 rows x 4 cols)
-  const TILES = [
-    // Row 1
-    { v: 200,  shape: 'circle' },
-    { v: 155,  shape: 'circle' },
-    { v: 155,  shape: 'circle' },
-    { v: 1000, shape: 'circle', icon: 'wallet' },
-    // Row 2
-    { v: 1000, shape: 'octagon', icon: 'basket' },
-    { v: 250,  shape: 'square',  icon: 'chevron' },
-    { v: 155,  shape: 'circle' },
-    { v: 175,  shape: 'circle' }, // the original "gold" from screenshot
-    // Row 3
-    { v: 155,  shape: 'circle' },
-    { v: 150,  shape: 'circle' },
-    { v: 225,  shape: 'circle' },
-    { v: 150,  shape: 'circle' },
-    // Row 4
-    { v: 160,  shape: 'circle', badge: 'wink' },
-    { v: 100,  shape: 'circle' },
-    { v: 583,  shape: 'octagon', icon: 'fuel' },
-    { v: 1000, shape: 'octagon', icon: 'suncream' },
-    // Row 5
-    { v: 175,  shape: 'circle' },
-    { v: 150,  shape: 'circle' },
-    { v: 500,  shape: 'circle' },
-    { v: 150,  shape: 'circle' },
-  ];
+  (function () {
+    var toast = document.getElementById('toast');
+    var playCountEl = document.getElementById('playCount');
+    var balanceEl = document.getElementById('balance');
+    var playedLineEl = document.getElementById('playedLine');
+    var resetBtn = document.getElementById('resetBtn');
+    var tiles = document.querySelectorAll('.tile');
 
-  const ICONS = {
-    wallet: `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h15a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/><path d="M3 7V6a2 2 0 0 1 2-2h11"/><circle cx="16" cy="13" r="1.2"/></svg>`,
-    basket: `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18l-2 10a2 2 0 0 1-2 1.6H7a2 2 0 0 1-2-1.6L3 9z"/><path d="M8 9l3-5"/><path d="M16 9l-3-5"/></svg>`,
-    chevron: `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M7 10l5 5 5-5"/></svg>`,
-    fuel: `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M4 13h10"/><path d="M4 21h10"/><path d="M14 8l3 3v7a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V9l-3-3"/></svg>`,
-    suncream: `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="8" width="10" height="13" rx="2"/><path d="M10 8V5h4v3"/><circle cx="17" cy="5" r="1"/><path d="M19 4l.8-.8"/><path d="M19 6h1.2"/><path d="M19 8l.8.8"/><path d="M17 3V1.8"/></svg>`
-  };
+    var picked = false;
+    var plays = 0;
+    var balance = 77883;
 
-  const BADGES = {
-    wink: '\u{1F609}' // 😉
-  };
+    function fmt(n) { return n.toLocaleString('en-US'); }
 
-  const grid = document.getElementById('grid');
-  const toast = document.getElementById('toast');
-  const playCountEl = document.getElementById('playCount');
-  const balanceEl = document.getElementById('balance');
-  const playedLineEl = document.getElementById('playedLine');
-  const boardDateEl = document.getElementById('boardDate');
-  const resetBtn = document.getElementById('resetBtn');
+    function updatePlayedLine() {
+      var now = new Date();
+      var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      var hh = String(now.getHours()).padStart(2,'0');
+      var mm = String(now.getMinutes()).padStart(2,'0');
+      playedLineEl.textContent = 'Played on ' + days[now.getDay()] + ' ' + now.getDate() + ' ' + months[now.getMonth()] + ' at ' + hh + ':' + mm;
+    }
 
-  let picked = false;
-  let plays = 0;
-  let balance = 77883;
+    function pickTile(tileEl) {
+      if (picked) return;
+      picked = true;
+      var value = parseInt(tileEl.getAttribute('data-v'), 10) || 0;
 
-  function fmt(n) { return n.toLocaleString('en-US'); }
+      tiles.forEach(function (el) {
+        if (el !== tileEl) el.classList.add('dim');
+      });
+      tileEl.classList.add('gold');
 
-  function buildBoard() {
-    grid.innerHTML = '';
-    TILES.forEach((t, idx) => {
-      const tile = document.createElement('button');
-      tile.type = 'button';
-      tile.className = 'tile';
-      tile.dataset.idx = idx;
+      plays += 1;
+      balance += value;
+      playCountEl.textContent = plays + (plays === 1 ? ' play' : ' plays');
+      balanceEl.textContent = fmt(balance);
+      updatePlayedLine();
 
-      const coin = document.createElement('div');
-      coin.className = `coin shape-${t.shape}`;
+      toast.textContent = 'You won \u0110' + fmt(value) + '!';
+      toast.classList.add('show');
+      setTimeout(function () { toast.classList.remove('show'); }, 2200);
 
-      const inner = t.icon
-        ? `${ICONS[t.icon]}<div class="label"><span class="sym">Đ</span><span class="val">${fmt(t.v)}</span></div>`
-        : `<div class="label"><span class="sym">Đ</span><span class="val">${fmt(t.v)}</span></div>`;
-      coin.innerHTML = inner;
+      if (navigator.vibrate) navigator.vibrate(20);
+    }
 
-      if (t.badge) {
-        const b = document.createElement('div');
-        b.className = 'badge-emoji';
-        b.textContent = BADGES[t.badge];
-        tile.appendChild(b);
-      }
-
-      tile.appendChild(coin);
-      tile.addEventListener('click', () => pickTile(idx, tile, t));
-      grid.appendChild(tile);
-    });
-  }
-
-  function pickTile(idx, tileEl, data) {
-    if (picked) return;
-    picked = true;
-
-    // Mark all other tiles as dim
-    document.querySelectorAll('.tile').forEach(el => {
-      if (el !== tileEl) el.classList.add('dim');
+    tiles.forEach(function (el) {
+      el.addEventListener('click', function () { pickTile(el); });
     });
 
-    tileEl.classList.add('gold');
-
-    // Update counters
-    plays += 1;
-    balance += data.v;
-    playCountEl.textContent = `${plays} play${plays === 1 ? '' : 's'}`;
-    balanceEl.textContent = fmt(balance);
-    updatePlayedLine();
-
-    // Toast
-    toast.textContent = `You won Đ${fmt(data.v)}!`;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2200);
-
-    // Haptic (if supported)
-    if (navigator.vibrate) navigator.vibrate(20);
-  }
-
-  function updatePlayedLine() {
-    const now = new Date();
-    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    const dayName = days[now.getDay()];
-    const hh = String(now.getHours()).padStart(2,'0');
-    const mm = String(now.getMinutes()).padStart(2,'0');
-    playedLineEl.textContent = `Played on ${dayName} ${now.getDate()} ${months[now.getMonth()]} at ${hh}:${mm}`;
-  }
-
-  resetBtn.addEventListener('click', () => {
-    picked = false;
-    document.querySelectorAll('.tile').forEach(el => {
-      el.classList.remove('gold', 'dim');
+    resetBtn.addEventListener('click', function () {
+      picked = false;
+      tiles.forEach(function (el) { el.classList.remove('gold', 'dim'); });
+      toast.classList.remove('show');
     });
-    toast.classList.remove('show');
-  });
-
-  buildBoard();
+  })();
 </script>
 </body>
 </html>
