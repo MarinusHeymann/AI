@@ -338,16 +338,25 @@
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  /* Reset button (subtle) */
-  .reset {
+  /* Play again button */
+  .play-again {
     display: block;
-    margin: 18px auto 0;
-    background: none;
+    margin: 20px auto 0;
+    background: linear-gradient(135deg, #7b5cff 0%, #e91e63 55%, #ff9a3c 100%);
+    color: #fff;
     border: 0;
-    color: var(--muted);
-    font-size: 13px;
-    padding: 8px 12px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: .1px;
+    padding: 14px 34px;
+    border-radius: 999px;
     cursor: pointer;
+    box-shadow: 0 6px 18px rgba(233, 30, 99, .28);
+    transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+  }
+  .play-again:active {
+    transform: scale(.97);
+    box-shadow: 0 3px 10px rgba(233, 30, 99, .25);
   }
 
   /* Not yet picked tiles stay silver; picked = gold */
@@ -446,7 +455,7 @@
       </div>
     </div>
 
-    <button class="reset" id="resetBtn">Reset</button>
+    <button class="play-again" id="resetBtn">Play again</button>
   </div>
 
   <div class="toast" id="toast">You won Đ175!</div>
