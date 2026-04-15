@@ -207,20 +207,36 @@
     letter-spacing: -0.3px;
   }
 
-  /* Icons hidden while masked; fade in on reveal */
-  .coin svg.ico {
+  /* Masked state: big centered "?" in every tile. The label (Đ + value)
+     is hidden until the tile's parent gets .revealed. */
+  .coin .label {
     opacity: 0;
-    transition: opacity .4s ease .1s;
+    transition: opacity .25s ease;
   }
-  .tile.revealed .coin svg.ico { opacity: 1; }
+  .coin::after {
+    content: "?";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 34px;
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: 0 2px 0 rgba(0,0,0,.25);
+    transition: opacity .25s ease;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .tile.revealed .coin::after { opacity: 0; }
+  .tile.revealed .coin .label { opacity: 1; }
 
-  /* Reveal pulse for the value */
+  /* Reveal pulse for the label when a tile flips */
   @keyframes revealPulse {
-    0%   { transform: scale(.35); opacity: 0; }
+    0%   { transform: scale(.4);  opacity: 0; }
     55%  { transform: scale(1.18); opacity: 1; }
     100% { transform: scale(1);    opacity: 1; }
   }
-  .tile.revealed .coin .val {
+  .tile.revealed .coin .label {
     animation: revealPulse 520ms cubic-bezier(.2,.9,.3,1.4);
   }
 
@@ -403,31 +419,26 @@
     <!-- Board -->
     <div class="board">
       <div class="grid" id="grid">
-        <!-- Row 1 -->
         <button type="button" class="tile" data-v="200"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">200</span></div></div></button>
         <button type="button" class="tile" data-v="155"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">155</span></div></div></button>
         <button type="button" class="tile" data-v="155"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">155</span></div></div></button>
-        <button type="button" class="tile" data-v="1000"><div class="coin shape-circle"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h15a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/><path d="M3 7V6a2 2 0 0 1 2-2h11"/><circle cx="16" cy="13" r="1.2"/></svg><div class="label"><span class="sym">Đ</span><span class="val">1,000</span></div></div></button>
+        <button type="button" class="tile" data-v="1000"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">1,000</span></div></div></button>
 
-        <!-- Row 2 -->
-        <button type="button" class="tile" data-v="1000"><div class="coin shape-octagon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18l-2 10a2 2 0 0 1-2 1.6H7a2 2 0 0 1-2-1.6L3 9z"/><path d="M8 9l3-5"/><path d="M16 9l-3-5"/></svg><div class="label"><span class="sym">Đ</span><span class="val">1,000</span></div></div></button>
-        <button type="button" class="tile" data-v="250"><div class="coin shape-square"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M7 10l5 5 5-5"/></svg><div class="label"><span class="sym">Đ</span><span class="val">250</span></div></div></button>
+        <button type="button" class="tile" data-v="1000"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">1,000</span></div></div></button>
+        <button type="button" class="tile" data-v="250"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">250</span></div></div></button>
         <button type="button" class="tile" data-v="155"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">155</span></div></div></button>
         <button type="button" class="tile" data-v="175"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">175</span></div></div></button>
 
-        <!-- Row 3 -->
         <button type="button" class="tile" data-v="155"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">155</span></div></div></button>
         <button type="button" class="tile" data-v="150"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">150</span></div></div></button>
         <button type="button" class="tile" data-v="225"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">225</span></div></div></button>
         <button type="button" class="tile" data-v="150"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">150</span></div></div></button>
 
-        <!-- Row 4 -->
-        <button type="button" class="tile" data-v="160"><div class="badge-emoji">&#128521;</div><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">160</span></div></div></button>
+        <button type="button" class="tile" data-v="160"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">160</span></div></div></button>
         <button type="button" class="tile" data-v="100"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">100</span></div></div></button>
-        <button type="button" class="tile" data-v="583"><div class="coin shape-octagon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M4 13h10"/><path d="M4 21h10"/><path d="M14 8l3 3v7a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V9l-3-3"/></svg><div class="label"><span class="sym">Đ</span><span class="val">583</span></div></div></button>
-        <button type="button" class="tile" data-v="1000"><div class="coin shape-octagon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="8" width="10" height="13" rx="2"/><path d="M10 8V5h4v3"/><circle cx="17" cy="5" r="1"/><path d="M19 4l.8-.8"/><path d="M19 6h1.2"/><path d="M19 8l.8.8"/><path d="M17 3V1.8"/></svg><div class="label"><span class="sym">Đ</span><span class="val">1,000</span></div></div></button>
+        <button type="button" class="tile" data-v="583"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">583</span></div></div></button>
+        <button type="button" class="tile" data-v="1000"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">1,000</span></div></div></button>
 
-        <!-- Row 5 -->
         <button type="button" class="tile" data-v="175"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">175</span></div></div></button>
         <button type="button" class="tile" data-v="150"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">150</span></div></div></button>
         <button type="button" class="tile" data-v="500"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">500</span></div></div></button>
@@ -455,17 +466,33 @@
 
     function fmt(n) { return n.toLocaleString('en-US'); }
 
-    // Mask every tile: stash the real value in data-v and replace the
-    // displayed number with "?" so the prize is hidden until the tile
-    // is picked.
-    tiles.forEach(function (el) {
-      var val = el.querySelector('.val');
-      if (!val) return;
-      if (!el.hasAttribute('data-v')) {
-        el.setAttribute('data-v', val.textContent.replace(/,/g, ''));
+    // Pool of prize values; same count and distribution as the original
+    // board. Shuffled on every reset so each round is a new surprise.
+    var VALUES = [
+      200, 155, 155, 1000,
+      1000, 250, 155, 175,
+      155, 150, 225, 150,
+      160, 100, 583, 1000,
+      175, 150, 500, 150
+    ];
+
+    function shuffle(arr) {
+      var a = arr.slice();
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
       }
-      val.textContent = '?';
-    });
+      return a;
+    }
+
+    function applyValues(values) {
+      tiles.forEach(function (el, i) {
+        var v = values[i];
+        el.setAttribute('data-v', v);
+        var val = el.querySelector('.val');
+        if (val) val.textContent = fmt(v);
+      });
+    }
 
     function updatePlayedLine() {
       var now = new Date();
@@ -508,14 +535,9 @@
       picked = true;
       var value = parseInt(tileEl.getAttribute('data-v'), 10) || 0;
 
-      // Reveal the real value on the picked tile.
-      var val = tileEl.querySelector('.val');
-      if (val) val.textContent = fmt(value);
-
-      tiles.forEach(function (el) {
-        if (el !== tileEl) el.classList.add('dim');
-      });
-      tileEl.classList.add('revealed', 'gold');
+      // Reveal every tile; mark the picked one gold.
+      tiles.forEach(function (el) { el.classList.add('revealed'); });
+      tileEl.classList.add('gold');
 
       fireConfetti(tileEl);
 
@@ -539,10 +561,10 @@
     resetBtn.addEventListener('click', function () {
       picked = false;
       tiles.forEach(function (el) {
-        el.classList.remove('gold', 'dim', 'revealed');
-        var val = el.querySelector('.val');
-        if (val) val.textContent = '?';
+        el.classList.remove('gold', 'revealed');
       });
+      // Randomise the prize layout for the next round.
+      applyValues(shuffle(VALUES));
       toast.classList.remove('show');
     });
   })();
