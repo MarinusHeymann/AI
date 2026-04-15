@@ -207,6 +207,23 @@
     letter-spacing: -0.3px;
   }
 
+  /* Icons hidden while masked; fade in on reveal */
+  .coin svg.ico {
+    opacity: 0;
+    transition: opacity .4s ease .1s;
+  }
+  .tile.revealed .coin svg.ico { opacity: 1; }
+
+  /* Reveal pulse for the value */
+  @keyframes revealPulse {
+    0%   { transform: scale(.35); opacity: 0; }
+    55%  { transform: scale(1.18); opacity: 1; }
+    100% { transform: scale(1);    opacity: 1; }
+  }
+  .tile.revealed .coin .val {
+    animation: revealPulse 520ms cubic-bezier(.2,.9,.3,1.4);
+  }
+
   /* Silver circular coin */
   .shape-circle {
     border-radius: 50%;
@@ -320,6 +337,28 @@
   /* Not yet picked tiles stay silver; picked = gold */
   .tile.dim .coin { filter: grayscale(.05) brightness(.98); }
 
+  /* Confetti burst */
+  .confetti {
+    position: fixed;
+    top: 0; left: 0;
+    width: 9px; height: 14px;
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 50;
+    will-change: transform, opacity;
+    animation: confetti-fly 1500ms ease-out forwards;
+  }
+  @keyframes confetti-fly {
+    0%   { transform: translate(var(--x), var(--y)) rotate(0deg); opacity: 1; }
+    70%  { opacity: 1; }
+    100% {
+      transform:
+        translate(calc(var(--x) + var(--dx)), calc(var(--y) + var(--dy) + 260px))
+        rotate(var(--rot));
+      opacity: 0;
+    }
+  }
+
   @media (max-width: 360px) {
     .coin .val { font-size: 17px; }
     .coin .sym { font-size: 12px; }
@@ -416,6 +455,18 @@
 
     function fmt(n) { return n.toLocaleString('en-US'); }
 
+    // Mask every tile: stash the real value in data-v and replace the
+    // displayed number with "?" so the prize is hidden until the tile
+    // is picked.
+    tiles.forEach(function (el) {
+      var val = el.querySelector('.val');
+      if (!val) return;
+      if (!el.hasAttribute('data-v')) {
+        el.setAttribute('data-v', val.textContent.replace(/,/g, ''));
+      }
+      val.textContent = '?';
+    });
+
     function updatePlayedLine() {
       var now = new Date();
       var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -425,15 +476,48 @@
       playedLineEl.textContent = 'Played on ' + days[now.getDay()] + ' ' + now.getDate() + ' ' + months[now.getMonth()] + ' at ' + hh + ':' + mm;
     }
 
+    var CONFETTI_COLORS = ['#ff4d6d','#ffa62b','#ffd23f','#2ec4b6','#3a86ff','#b5179e','#8ac926'];
+    function fireConfetti(originEl) {
+      var rect = originEl.getBoundingClientRect();
+      var cx = rect.left + rect.width / 2;
+      var cy = rect.top + rect.height / 2;
+      var count = 48;
+      for (var i = 0; i < count; i++) {
+        var p = document.createElement('div');
+        p.className = 'confetti';
+        var angle = (Math.PI * 2 * i) / count + Math.random() * 0.4;
+        var speed = 90 + Math.random() * 180;
+        var dx = Math.cos(angle) * speed;
+        var dy = Math.sin(angle) * speed - 80; // bias upward
+        p.style.setProperty('--x', cx + 'px');
+        p.style.setProperty('--y', cy + 'px');
+        p.style.setProperty('--dx', dx + 'px');
+        p.style.setProperty('--dy', dy + 'px');
+        p.style.setProperty('--rot', (Math.random() * 900 - 450) + 'deg');
+        p.style.background = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
+        p.style.animationDelay = (Math.random() * 60) + 'ms';
+        document.body.appendChild(p);
+        (function (node) {
+          setTimeout(function () { if (node.parentNode) node.parentNode.removeChild(node); }, 1800);
+        })(p);
+      }
+    }
+
     function pickTile(tileEl) {
       if (picked) return;
       picked = true;
       var value = parseInt(tileEl.getAttribute('data-v'), 10) || 0;
 
+      // Reveal the real value on the picked tile.
+      var val = tileEl.querySelector('.val');
+      if (val) val.textContent = fmt(value);
+
       tiles.forEach(function (el) {
         if (el !== tileEl) el.classList.add('dim');
       });
-      tileEl.classList.add('gold');
+      tileEl.classList.add('revealed', 'gold');
+
+      fireConfetti(tileEl);
 
       plays += 1;
       balance += value;
@@ -443,9 +527,9 @@
 
       toast.textContent = 'You won \u0110' + fmt(value) + '!';
       toast.classList.add('show');
-      setTimeout(function () { toast.classList.remove('show'); }, 2200);
+      setTimeout(function () { toast.classList.remove('show'); }, 2400);
 
-      if (navigator.vibrate) navigator.vibrate(20);
+      if (navigator.vibrate) navigator.vibrate([15, 40, 15]);
     }
 
     tiles.forEach(function (el) {
@@ -454,7 +538,11 @@
 
     resetBtn.addEventListener('click', function () {
       picked = false;
-      tiles.forEach(function (el) { el.classList.remove('gold', 'dim'); });
+      tiles.forEach(function (el) {
+        el.classList.remove('gold', 'dim', 'revealed');
+        var val = el.querySelector('.val');
+        if (val) val.textContent = '?';
+      });
       toast.classList.remove('show');
     });
   })();
