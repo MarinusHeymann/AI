@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="theme-color" content="#ffffff" />
+<title>Play the gameboard</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #111214;
+    --muted: #6b7079;
+    --line: #e9ebee;
+    --pill: #f1f2f5;
+    --card: #ffffff;
+    --panel: #f7f8fa;
+    --gold-1: #f8df6b;
+    --gold-2: #e7b324;
+    --gold-3: #b07a08;
+    --silver-1: #f3f4f6;
+    --silver-2: #d6d9de;
+    --silver-3: #9ea3ad;
+    --silver-4: #7a7f88;
+    --accent: #e91e63;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+  }
+  body {
+    min-height: 100vh;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .app {
+    max-width: 430px;
+    margin: 0 auto;
+    padding: 0 18px 24px;
+  }
+
+  /* Header */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 48px;
+    padding: 0 2px;
+    position: relative;
+  }
+  .icon-btn {
+    width: 36px; height: 36px;
+    display: grid; place-items: center;
+    background: none; border: 0; cursor: pointer;
+    color: var(--ink);
+  }
+  .icon-btn svg { width: 22px; height: 22px; }
+  .title {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+  .topbar::after {
+    content: "";
+    position: absolute;
+    left: -18px; right: -18px; bottom: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #7b5cff 0%, #e91e63 55%, #ff9a3c 100%);
+    opacity: .85;
+  }
+
+  /* Stats pills */
+  .stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--pill);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-weight: 600;
+    font-size: 15px;
+    color: #1d1f22;
+  }
+  .pill .grid-ico {
+    width: 18px; height: 18px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+  }
+  .pill .grid-ico i {
+    display: block;
+    background: #e91e63;
+    border-radius: 1px;
+  }
+  .pill .coin-ico {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #f6e27a 0%, #e7b324 55%, #b07a08 100%);
+    display: grid; place-items: center;
+    color: #5a3b00;
+    font-weight: 800;
+    font-size: 12px;
+    border: 1px solid #c9911c;
+  }
+
+  /* Gameboard heading */
+  .heading {
+    text-align: center;
+    margin: 18px 0 6px;
+  }
+  .heading h1 {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .heading .played {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* Board panel */
+  .board {
+    margin-top: 14px;
+    background: var(--panel);
+    border-radius: 22px;
+    padding: 14px 12px 18px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.02) inset;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  /* Tile card */
+  .tile {
+    position: relative;
+    background: #fff;
+    border-radius: 14px;
+    aspect-ratio: 1 / 1;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 1px 2px rgba(16,24,40,.06), 0 0 0 1px rgba(16,24,40,.04);
+    cursor: pointer;
+    transition: transform .15s ease;
+    user-select: none;
+  }
+  .tile:active { transform: scale(.97); }
+
+  /* Coin shapes */
+  .coin {
+    width: 82%;
+    height: 82%;
+    display: grid;
+    place-items: center;
+    position: relative;
+    color: #fff;
+    font-weight: 800;
+    font-size: 18px;
+    text-shadow: 0 1px 0 rgba(0,0,0,.25);
+  }
+  .coin .label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+    gap: 2px;
+  }
+  .coin .sym {
+    font-size: 13px;
+    font-weight: 800;
+    opacity: .95;
+  }
+  .coin .val {
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+  }
+
+  /* Silver circular coin */
+  .shape-circle {
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 32% 28%, #ffffff 0%, #e3e5ea 35%, #b9bdc6 60%, #878c95 100%);
+    box-shadow:
+      inset 0 0 0 2px rgba(255,255,255,.35),
+      inset 0 -6px 12px rgba(0,0,0,.12),
+      0 1px 2px rgba(0,0,0,.12);
+  }
+  /* Subtle "texture" via repeating gradient */
+  .shape-circle::before {
+    content: "";
+    position: absolute; inset: 6%;
+    border-radius: 50%;
+    background:
+      repeating-radial-gradient(circle at 30% 30%, rgba(255,255,255,.05) 0 2px, rgba(0,0,0,.03) 2px 4px);
+    mix-blend-mode: overlay;
+    opacity: .6;
+    pointer-events: none;
+  }
+
+  /* Octagon coin */
+  .shape-octagon {
+    background:
+      radial-gradient(circle at 35% 30%, #f1f2f5 0%, #d6d9de 45%, #a4a8b1 80%, #7a7f88 100%);
+    clip-path: polygon(
+      30% 0%, 70% 0%,
+      100% 30%, 100% 70%,
+      70% 100%, 30% 100%,
+      0% 70%, 0% 30%
+    );
+    box-shadow: inset 0 -6px 12px rgba(0,0,0,.12);
+  }
+
+  /* Rounded square coin (the 250 tile) */
+  .shape-square {
+    border-radius: 14px;
+    background:
+      radial-gradient(circle at 35% 28%, #e6e8ec 0%, #c6c9d0 55%, #8f949d 100%);
+    box-shadow: inset 0 -6px 12px rgba(0,0,0,.15), inset 0 0 0 2px rgba(255,255,255,.25);
+  }
+
+  /* Gold variant */
+  .tile.gold .coin.shape-circle {
+    background:
+      radial-gradient(circle at 32% 28%, #fff7c8 0%, #f4d661 30%, #e0a91e 65%, #9e6a06 100%);
+    box-shadow:
+      inset 0 0 0 2px rgba(255,255,255,.45),
+      inset 0 -6px 12px rgba(80,40,0,.25),
+      0 1px 3px rgba(160,100,0,.3);
+  }
+  .tile.gold {
+    box-shadow: 0 0 0 2px #e7b324, 0 2px 8px rgba(231,179,36,.35);
+  }
+
+  /* Icon content inside the coin */
+  .coin svg.ico {
+    width: 36%;
+    height: 36%;
+    margin-bottom: 1px;
+    filter: drop-shadow(0 1px 0 rgba(0,0,0,.2));
+  }
+
+  /* Emoji badge */
+  .badge-emoji {
+    position: absolute;
+    top: -2px; left: -2px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: #f7c948;
+    border: 2px solid #fff;
+    display: grid; place-items: center;
+    font-size: 14px;
+    line-height: 1;
+    box-shadow: 0 1px 2px rgba(0,0,0,.15);
+  }
+
+  /* Surprise overlay */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 32px;
+    transform: translateX(-50%) translateY(20px);
+    background: #111;
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease;
+    z-index: 20;
+    box-shadow: 0 6px 20px rgba(0,0,0,.25);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Reset button (subtle) */
+  .reset {
+    display: block;
+    margin: 18px auto 0;
+    background: none;
+    border: 0;
+    color: var(--muted);
+    font-size: 13px;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+
+  /* Not yet picked tiles stay silver; picked = gold */
+  .tile.dim .coin { filter: grayscale(.05) brightness(.98); }
+
+  @media (max-width: 360px) {
+    .coin .val { font-size: 17px; }
+    .coin .sym { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="topbar">
+      <button class="icon-btn" aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="title">Play the gameboard</div>
+      <button class="icon-btn" aria-label="Share">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><path d="M7 8l5-5 5 5"/><path d="M5 21h14"/></svg>
+      </button>
+    </header>
+
+    <!-- Stats pills -->
+    <div class="stats">
+      <div class="pill">
+        <span class="grid-ico" aria-hidden="true">
+          <i></i><i></i><i></i>
+          <i></i><i></i><i></i>
+          <i></i><i></i><i></i>
+        </span>
+        <span id="playCount">0 plays</span>
+      </div>
+      <div class="pill">
+        <span class="coin-ico">Đ</span>
+        <span id="balance">77,883</span>
+      </div>
+    </div>
+
+    <!-- Heading -->
+    <div class="heading">
+      <h1>Gameboard<br/><span id="boardDate">Wednesday 08 April</span></h1>
+      <div class="played" id="playedLine">Played on Saturday 11 April at 15:24</div>
+    </div>
+
+    <!-- Board -->
+    <div class="board">
+      <div class="grid" id="grid"></div>
+    </div>
+
+    <button class="reset" id="resetBtn">Reset</button>
+  </div>
+
+  <div class="toast" id="toast">You won Đ175!</div>
+
+<script>
+  // Tile definitions matching the screenshot layout (5 rows x 4 cols)
+  const TILES = [
+    // Row 1
+    { v: 200,  shape: 'circle' },
+    { v: 155,  shape: 'circle' },
+    { v: 155,  shape: 'circle' },
+    { v: 1000, shape: 'circle', icon: 'wallet' },
+    // Row 2
+    { v: 1000, shape: 'octagon', icon: 'basket' },
+    { v: 250,  shape: 'square',  icon: 'chevron' },
+    { v: 155,  shape: 'circle' },
+    { v: 175,  shape: 'circle' }, // the original "gold" from screenshot
+    // Row 3
+    { v: 155,  shape: 'circle' },
+    { v: 150,  shape: 'circle' },
+    { v: 225,  shape: 'circle' },
+    { v: 150,  shape: 'circle' },
+    // Row 4
+    { v: 160,  shape: 'circle', badge: 'wink' },
+    { v: 100,  shape: 'circle' },
+    { v: 583,  shape: 'octagon', icon: 'fuel' },
+    { v: 1000, shape: 'octagon', icon: 'suncream' },
+    // Row 5
+    { v: 175,  shape: 'circle' },
+    { v: 150,  shape: 'circle' },
+    { v: 500,  shape: 'circle' },
+    { v: 150,  shape: 'circle' },
+  ];
+
+  const ICONS = {
+    wallet: `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h15a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/><path d="M3 7V6a2 2 0 0 1 2-2h11"/><circle cx="16" cy="13" r="1.2"/></svg>`,
+    basket: `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18l-2 10a2 2 0 0 1-2 1.6H7a2 2 0 0 1-2-1.6L3 9z"/><path d="M8 9l3-5"/><path d="M16 9l-3-5"/></svg>`,
+    chevron: `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M7 10l5 5 5-5"/></svg>`,
+    fuel: `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M4 13h10"/><path d="M4 21h10"/><path d="M14 8l3 3v7a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V9l-3-3"/></svg>`,
+    suncream: `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="8" width="10" height="13" rx="2"/><path d="M10 8V5h4v3"/><circle cx="17" cy="5" r="1"/><path d="M19 4l.8-.8"/><path d="M19 6h1.2"/><path d="M19 8l.8.8"/><path d="M17 3V1.8"/></svg>`
+  };
+
+  const BADGES = {
+    wink: '\u{1F609}' // 😉
+  };
+
+  const grid = document.getElementById('grid');
+  const toast = document.getElementById('toast');
+  const playCountEl = document.getElementById('playCount');
+  const balanceEl = document.getElementById('balance');
+  const playedLineEl = document.getElementById('playedLine');
+  const boardDateEl = document.getElementById('boardDate');
+  const resetBtn = document.getElementById('resetBtn');
+
+  let picked = false;
+  let plays = 0;
+  let balance = 77883;
+
+  function fmt(n) { return n.toLocaleString('en-US'); }
+
+  function buildBoard() {
+    grid.innerHTML = '';
+    TILES.forEach((t, idx) => {
+      const tile = document.createElement('button');
+      tile.type = 'button';
+      tile.className = 'tile';
+      tile.dataset.idx = idx;
+
+      const coin = document.createElement('div');
+      coin.className = `coin shape-${t.shape}`;
+
+      const inner = t.icon
+        ? `${ICONS[t.icon]}<div class="label"><span class="sym">Đ</span><span class="val">${fmt(t.v)}</span></div>`
+        : `<div class="label"><span class="sym">Đ</span><span class="val">${fmt(t.v)}</span></div>`;
+      coin.innerHTML = inner;
+
+      if (t.badge) {
+        const b = document.createElement('div');
+        b.className = 'badge-emoji';
+        b.textContent = BADGES[t.badge];
+        tile.appendChild(b);
+      }
+
+      tile.appendChild(coin);
+      tile.addEventListener('click', () => pickTile(idx, tile, t));
+      grid.appendChild(tile);
+    });
+  }
+
+  function pickTile(idx, tileEl, data) {
+    if (picked) return;
+    picked = true;
+
+    // Mark all other tiles as dim
+    document.querySelectorAll('.tile').forEach(el => {
+      if (el !== tileEl) el.classList.add('dim');
+    });
+
+    tileEl.classList.add('gold');
+
+    // Update counters
+    plays += 1;
+    balance += data.v;
+    playCountEl.textContent = `${plays} play${plays === 1 ? '' : 's'}`;
+    balanceEl.textContent = fmt(balance);
+    updatePlayedLine();
+
+    // Toast
+    toast.textContent = `You won Đ${fmt(data.v)}!`;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2200);
+
+    // Haptic (if supported)
+    if (navigator.vibrate) navigator.vibrate(20);
+  }
+
+  function updatePlayedLine() {
+    const now = new Date();
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const dayName = days[now.getDay()];
+    const hh = String(now.getHours()).padStart(2,'0');
+    const mm = String(now.getMinutes()).padStart(2,'0');
+    playedLineEl.textContent = `Played on ${dayName} ${now.getDate()} ${months[now.getMonth()]} at ${hh}:${mm}`;
+  }
+
+  resetBtn.addEventListener('click', () => {
+    picked = false;
+    document.querySelectorAll('.tile').forEach(el => {
+      el.classList.remove('gold', 'dim');
+    });
+    toast.classList.remove('show');
+  });
+
+  buildBoard();
+</script>
+</body>
+</html>
