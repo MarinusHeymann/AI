@@ -2,572 +2,1504 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="default" />
-<meta name="theme-color" content="#ffffff" />
-<title>Play the gameboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#0d1117" />
+<title>Hospitality Talent Cloud — recruitment portal for hotel groups</title>
+<meta name="description" content="A bold, multi-tenant recruitment portal for hotel groups. One pipeline for every property." />
 <style>
   :root {
-    --bg: #ffffff;
-    --ink: #111214;
-    --muted: #6b7079;
-    --line: #e9ebee;
-    --pill: #f1f2f5;
-    --card: #ffffff;
-    --panel: #f7f8fa;
-    --gold-1: #f8df6b;
-    --gold-2: #e7b324;
-    --gold-3: #b07a08;
-    --silver-1: #f3f4f6;
-    --silver-2: #d6d9de;
-    --silver-3: #9ea3ad;
-    --silver-4: #7a7f88;
-    --accent: #e91e63;
+    --ink: #0d1117;
+    --ink-2: #161b22;
+    --ink-3: #1f2630;
+    --line: #262d39;
+    --line-2: #2f3744;
+    --muted: #8a93a3;
+    --muted-2: #b5bcc9;
+    --paper: #f5f3ee;
+    --paper-2: #ffffff;
+    --gold: #d4a657;
+    --gold-2: #f0c270;
+    --gold-3: #8d6a2c;
+    --accent: #6c8cff;
+    --good: #5cc98f;
+    --warn: #ffb74a;
+    --bad: #ff6f6f;
+    --shadow-lg: 0 30px 60px -20px rgba(0,0,0,.55), 0 18px 35px -25px rgba(0,0,0,.4);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --radius-xs: 8px;
   }
 
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  * { box-sizing: border-box; }
   html, body {
     margin: 0; padding: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
-    overscroll-behavior: none;
-  }
-  body {
+    font-feature-settings: "ss01","cv11";
     min-height: 100vh;
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  input, select { font: inherit; color: inherit; }
+
+  /* ---------- Layout shell ---------- */
+  .shell {
+    display: grid;
+    grid-template-columns: 248px 1fr;
+    min-height: 100vh;
+  }
+  @media (max-width: 1024px) {
+    .shell { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
   }
 
-  .app {
-    max-width: 430px;
-    margin: 0 auto;
-    padding: 0 18px 24px;
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    background: linear-gradient(180deg, #0a0e14 0%, #0d1117 100%);
+    border-right: 1px solid var(--line);
+    padding: 22px 16px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
   }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 8px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .brand-mark {
+    width: 38px; height: 38px;
+    border-radius: 11px;
+    background:
+      radial-gradient(circle at 30% 25%, #fff3d4 0%, var(--gold-2) 35%, var(--gold) 60%, var(--gold-3) 100%);
+    display: grid; place-items: center;
+    color: #2a1d05;
+    font-weight: 800;
+    font-size: 18px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.4), 0 4px 14px rgba(212,166,87,.25);
+  }
+  .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+  .brand-text b { font-size: 14px; letter-spacing: .2px; }
+  .brand-text span { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
-  /* Header */
+  .nav-section { display: flex; flex-direction: column; gap: 2px; }
+  .nav-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    padding: 12px 10px 6px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 10px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: var(--muted-2);
+    transition: background .15s ease, color .15s ease;
+    cursor: pointer;
+    user-select: none;
+  }
+  .nav-item:hover { background: rgba(255,255,255,.04); color: #fff; }
+  .nav-item.active {
+    background: linear-gradient(180deg, rgba(212,166,87,.18), rgba(212,166,87,.08));
+    color: #fff;
+    box-shadow: inset 0 0 0 1px rgba(212,166,87,.35);
+  }
+  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .nav-badge {
+    margin-left: auto;
+    background: var(--ink-3);
+    color: var(--muted-2);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 999px;
+  }
+  .nav-item.active .nav-badge { background: var(--gold); color: #2a1d05; }
+
+  .sidebar-foot {
+    margin-top: auto;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6c8cff, #b25cff);
+    display: grid; place-items: center;
+    font-weight: 700; font-size: 13px;
+    color: #fff;
+  }
+  .sidebar-foot small { display: block; color: var(--muted); font-size: 11px; }
+
+  /* ---------- Main ---------- */
+  .main { display: flex; flex-direction: column; min-width: 0; }
+
+  /* ---------- Top bar ---------- */
   .topbar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    height: 48px;
-    padding: 0 2px;
+    gap: 16px;
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(13,17,23,.85);
+    backdrop-filter: blur(10px);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .tenant-switch {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 14px 8px 8px;
+    background: var(--ink-2);
+    border: 1px solid var(--line-2);
+    border-radius: 12px;
+    cursor: pointer;
+    min-width: 220px;
+    transition: border-color .15s;
+  }
+  .tenant-switch:hover { border-color: var(--gold); }
+  .tenant-logo {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: var(--gold);
+    color: #2a1d05;
+    font-weight: 800;
+    display: grid; place-items: center;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .tenant-info { display: flex; flex-direction: column; line-height: 1.15; }
+  .tenant-info b { font-size: 13px; }
+  .tenant-info span { font-size: 11px; color: var(--muted); }
+  .chev { margin-left: auto; color: var(--muted); }
+
+  .search {
+    flex: 1;
+    max-width: 480px;
     position: relative;
   }
-  .icon-btn {
-    width: 36px; height: 36px;
-    display: grid; place-items: center;
-    background: none; border: 0; cursor: pointer;
-    color: var(--ink);
+  .search input {
+    width: 100%;
+    background: var(--ink-2);
+    border: 1px solid var(--line-2);
+    border-radius: 10px;
+    padding: 10px 14px 10px 38px;
+    color: var(--paper);
+    outline: none;
+    transition: border-color .15s;
   }
-  .icon-btn svg { width: 22px; height: 22px; }
-  .title {
-    font-size: 17px;
+  .search input:focus { border-color: var(--gold); }
+  .search input::placeholder { color: var(--muted); }
+  .search svg {
+    position: absolute;
+    left: 12px; top: 50%;
+    transform: translateY(-50%);
+    width: 16px; height: 16px;
+    color: var(--muted);
+  }
+  .search kbd {
+    position: absolute;
+    right: 10px; top: 50%;
+    transform: translateY(-50%);
+    background: var(--ink-3);
+    border: 1px solid var(--line-2);
+    border-radius: 5px;
+    padding: 2px 6px;
+    font-size: 11px;
+    color: var(--muted);
+    font-family: inherit;
+  }
+
+  .top-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 14px;
+    border-radius: 10px;
+    font-size: 13px;
     font-weight: 600;
-    letter-spacing: -0.2px;
+    transition: transform .1s ease, background .15s, box-shadow .15s;
+    cursor: pointer;
+    white-space: nowrap;
   }
-  .topbar::after {
+  .btn:active { transform: translateY(1px); }
+  .btn-ghost { background: var(--ink-2); border: 1px solid var(--line-2); color: var(--paper); }
+  .btn-ghost:hover { background: var(--ink-3); }
+  .btn-primary {
+    background: linear-gradient(180deg, var(--gold-2), var(--gold));
+    color: #2a1d05;
+    box-shadow: 0 6px 18px -6px rgba(212,166,87,.6);
+  }
+  .btn-primary:hover { box-shadow: 0 10px 24px -8px rgba(212,166,87,.7); }
+  .icon-btn-bare {
+    width: 38px; height: 38px;
+    display: grid; place-items: center;
+    border-radius: 10px;
+    background: var(--ink-2);
+    border: 1px solid var(--line-2);
+    color: var(--muted-2);
+    cursor: pointer;
+  }
+  .icon-btn-bare:hover { color: var(--paper); border-color: var(--gold); }
+
+  /* ---------- View shell ---------- */
+  .view {
+    padding: 28px 28px 60px;
+    display: none;
+    animation: fadeIn .3s ease;
+  }
+  .view.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .view-head {
+    display: flex; align-items: end; justify-content: space-between;
+    margin-bottom: 22px; gap: 16px; flex-wrap: wrap;
+  }
+  .view-head h1 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -.4px;
+  }
+  .view-head p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .scope-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .scope-chip {
+    background: var(--ink-2);
+    border: 1px solid var(--line-2);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--muted-2);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .scope-chip.active {
+    background: rgba(212,166,87,.15);
+    border-color: var(--gold);
+    color: var(--gold-2);
+  }
+  .scope-chip:hover { color: #fff; }
+
+  /* ---------- KPI cards ---------- */
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 22px;
+  }
+  @media (max-width: 900px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
+  .kpi {
+    background: linear-gradient(180deg, var(--ink-2) 0%, #131820 100%);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 18px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi::before {
     content: "";
     position: absolute;
-    left: -18px; right: -18px; bottom: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #7b5cff 0%, #e91e63 55%, #ff9a3c 100%);
+    inset: 0 0 auto 0; height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    opacity: .7;
+  }
+  .kpi .label {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .kpi .value {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -.5px;
+    line-height: 1;
+  }
+  .kpi .delta {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--good);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .kpi .delta.down { color: var(--bad); }
+  .kpi .delta.flat { color: var(--muted); }
+  .kpi .spark {
+    position: absolute;
+    right: 12px; bottom: 10px;
+    width: 90px; height: 32px;
     opacity: .85;
   }
 
-  /* Stats pills */
-  .stats {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 14px;
+  /* ---------- Cards & sections ---------- */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
   }
-  .pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--pill);
-    border-radius: 999px;
-    padding: 8px 14px;
-    font-weight: 600;
+  @media (max-width: 1200px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 1200px) { .grid-3 { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .card h3 {
+    margin: 0 0 4px;
     font-size: 15px;
-    color: #1d1f22;
+    font-weight: 600;
+    letter-spacing: -.1px;
   }
-  .pill .grid-ico {
-    width: 18px; height: 18px;
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
-  }
-  .pill .grid-ico i {
-    display: block;
-    background: #e91e63;
-    border-radius: 1px;
-  }
-  .pill .coin-ico {
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #f6e27a 0%, #e7b324 55%, #b07a08 100%);
-    display: grid; place-items: center;
-    color: #5a3b00;
-    font-weight: 800;
-    font-size: 12px;
-    border: 1px solid #c9911c;
-  }
-
-  /* Gameboard heading */
-  .heading {
-    text-align: center;
-    margin: 18px 0 6px;
-  }
-  .heading h1 {
-    margin: 0;
-    font-size: 22px;
-    line-height: 1.15;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-  }
-  .heading .played {
-    margin-top: 6px;
-    font-size: 13px;
+  .card .sub {
     color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 14px;
   }
+  .card-head {
+    display: flex; align-items: start; justify-content: space-between;
+    margin-bottom: 16px; gap: 12px;
+  }
+  .card-head h3 { margin: 0; font-size: 15px; }
+  .card-head .sub { margin: 4px 0 0; }
 
-  /* Board panel */
-  .board {
-    margin-top: 14px;
-    background: var(--panel);
-    border-radius: 22px;
-    padding: 14px 12px 18px;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.02) inset;
-  }
-  .grid {
+  /* ---------- Funnel ---------- */
+  .funnel { display: flex; flex-direction: column; gap: 8px; }
+  .funnel-row {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 130px 1fr 70px 60px;
     gap: 12px;
+    align-items: center;
   }
-
-  /* Tile card */
-  .tile {
+  .funnel-row .stage { font-size: 13px; color: var(--muted-2); }
+  .funnel-bar {
+    height: 28px;
+    border-radius: 8px;
+    background: rgba(255,255,255,.05);
+    overflow: hidden;
     position: relative;
-    background: #fff;
-    border-radius: 14px;
-    aspect-ratio: 1 / 1;
+  }
+  .funnel-bar i {
+    display: block; height: 100%;
+    background: linear-gradient(90deg, var(--gold-2), var(--gold));
+    border-radius: 8px;
+    transition: width .6s cubic-bezier(.4,.2,.2,1);
+  }
+  .funnel-bar.s2 i { background: linear-gradient(90deg, #f7d089, #e8b057); }
+  .funnel-bar.s3 i { background: linear-gradient(90deg, #ddbf7a, #c79849); }
+  .funnel-bar.s4 i { background: linear-gradient(90deg, #c0a96d, #a37c3b); }
+  .funnel-bar.s5 i { background: linear-gradient(90deg, #a8945e, #8d6a2c); }
+  .funnel-row .count { font-size: 13px; font-weight: 600; text-align: right; }
+  .funnel-row .conv { font-size: 11px; color: var(--muted); text-align: right; }
+
+  /* ---------- Donut ---------- */
+  .donut-wrap {
     display: grid;
-    place-items: center;
-    box-shadow: 0 1px 2px rgba(16,24,40,.06), 0 0 0 1px rgba(16,24,40,.04);
+    grid-template-columns: 160px 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+  .donut-legend { display: flex; flex-direction: column; gap: 8px; font-size: 12px; }
+  .legend-row { display: flex; align-items: center; gap: 8px; }
+  .swatch { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+  .legend-row .pct { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  /* ---------- Hires by property bars ---------- */
+  .bars { display: flex; flex-direction: column; gap: 10px; }
+  .bar-row {
+    display: grid;
+    grid-template-columns: 1fr 200px 40px;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+  }
+  .bar-track {
+    height: 10px;
+    background: rgba(255,255,255,.05);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .bar-track i {
+    display: block; height: 100%;
+    background: linear-gradient(90deg, var(--gold-2), var(--gold-3));
+  }
+  .bar-row .num { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted-2); }
+
+  /* ---------- Activity feed ---------- */
+  .feed { display: flex; flex-direction: column; }
+  .feed-item {
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    gap: 12px;
+    padding: 12px 0;
+    align-items: start;
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+  }
+  .feed-item:last-child { border-bottom: 0; }
+  .feed-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--gold);
+    margin: 6px 0 0 11px;
+    flex-shrink: 0;
+  }
+  .feed-text { line-height: 1.45; }
+  .feed-text b { font-weight: 600; }
+  .feed-text .meta { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .feed-time { color: var(--muted); font-size: 11px; white-space: nowrap; }
+
+  /* ---------- Spotlight ---------- */
+  .spotlight { display: flex; flex-direction: column; gap: 10px; }
+  .spot-card {
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--line);
+    align-items: center;
     cursor: pointer;
-    transition: transform .15s ease;
-    user-select: none;
-    -webkit-user-select: none;
-    padding: 0;
-    border: 0;
-    font: inherit;
-    color: inherit;
+    transition: border-color .15s, transform .15s;
   }
-  /* aspect-ratio fallback for older Safari */
-  @supports not (aspect-ratio: 1 / 1) {
-    .tile::before {
-      content: "";
-      display: block;
-      padding-top: 100%;
-      grid-area: 1 / 1;
-    }
-    .tile > * { grid-area: 1 / 1; }
+  .spot-card:hover { border-color: var(--gold); transform: translateY(-1px); }
+  .spot-card .ava {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    display: grid; place-items: center;
+    font-weight: 700; color: #fff;
+    font-size: 14px;
   }
-  .tile:active { transform: scale(.97); }
-
-  /* Coin shapes */
-  .coin {
-    width: 82%;
-    height: 82%;
-    display: grid;
-    place-items: center;
+  .spot-name { font-size: 13px; font-weight: 600; }
+  .spot-role { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .score {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: 13px; font-weight: 700;
+    color: #2a1d05;
+    background: conic-gradient(var(--gold) calc(var(--p,80) * 1%), rgba(255,255,255,.08) 0);
     position: relative;
-    color: #fff;
-    font-weight: 800;
-    font-size: 18px;
-    text-shadow: 0 1px 0 rgba(0,0,0,.25);
   }
-  .coin .label {
+  .score::before {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: var(--ink-2);
+  }
+  .score span {
+    position: relative;
+    z-index: 1;
+    color: var(--gold-2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Kanban ---------- */
+  .kanban {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(220px, 1fr));
+    gap: 14px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+  }
+  .kcol {
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px;
+    min-height: 480px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    line-height: 1;
-    gap: 2px;
+    gap: 10px;
+    transition: background .15s, border-color .15s;
   }
-  .coin .sym {
-    font-size: 13px;
-    font-weight: 800;
-    opacity: .95;
+  .kcol.drag-over { background: rgba(212,166,87,.06); border-color: var(--gold); }
+  .kcol-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 4px;
   }
-  .coin .val {
-    font-size: 19px;
-    font-weight: 800;
-    letter-spacing: -0.3px;
-  }
-
-  /* Masked state: big centered "?" in every tile. The label (Đ + value)
-     is hidden until the tile's parent gets .revealed. */
-  .coin .label {
-    opacity: 0;
-    transition: opacity .25s ease;
-  }
-  .coin::after {
-    content: "?";
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    font-size: 34px;
-    font-weight: 800;
-    color: #ffffff;
-    text-shadow: 0 2px 0 rgba(0,0,0,.25);
-    transition: opacity .25s ease;
-    z-index: 2;
-    pointer-events: none;
-  }
-  .tile.revealed .coin::after { opacity: 0; }
-  .tile.revealed .coin .label { opacity: 1; }
-
-  /* Reveal pulse for the label when a tile flips */
-  @keyframes revealPulse {
-    0%   { transform: scale(.4);  opacity: 0; }
-    55%  { transform: scale(1.18); opacity: 1; }
-    100% { transform: scale(1);    opacity: 1; }
-  }
-  .tile.revealed .coin .label {
-    animation: revealPulse 520ms cubic-bezier(.2,.9,.3,1.4);
-  }
-
-  /* Silver circular coin */
-  .shape-circle {
-    border-radius: 50%;
-    background:
-      radial-gradient(circle at 32% 28%, #ffffff 0%, #e3e5ea 35%, #b9bdc6 60%, #878c95 100%);
-    box-shadow:
-      inset 0 0 0 2px rgba(255,255,255,.35),
-      inset 0 -6px 12px rgba(0,0,0,.12),
-      0 1px 2px rgba(0,0,0,.12);
-  }
-  /* Subtle "texture" via repeating gradient */
-  .shape-circle::before {
-    content: "";
-    position: absolute; inset: 6%;
-    border-radius: 50%;
-    background:
-      repeating-radial-gradient(circle at 30% 30%, rgba(255,255,255,.05) 0 2px, rgba(0,0,0,.03) 2px 4px);
-    mix-blend-mode: overlay;
-    opacity: .6;
-    pointer-events: none;
-  }
-
-  /* Octagon coin */
-  .shape-octagon {
-    background:
-      radial-gradient(circle at 35% 30%, #f1f2f5 0%, #d6d9de 45%, #a4a8b1 80%, #7a7f88 100%);
-    clip-path: polygon(
-      30% 0%, 70% 0%,
-      100% 30%, 100% 70%,
-      70% 100%, 30% 100%,
-      0% 70%, 0% 30%
-    );
-    box-shadow: inset 0 -6px 12px rgba(0,0,0,.12);
-  }
-
-  /* Rounded square coin (the 250 tile) */
-  .shape-square {
-    border-radius: 14px;
-    background:
-      radial-gradient(circle at 35% 28%, #e6e8ec 0%, #c6c9d0 55%, #8f949d 100%);
-    box-shadow: inset 0 -6px 12px rgba(0,0,0,.15), inset 0 0 0 2px rgba(255,255,255,.25);
-  }
-
-  /* Gold variant */
-  .tile.gold .coin.shape-circle {
-    background:
-      radial-gradient(circle at 32% 28%, #fff7c8 0%, #f4d661 30%, #e0a91e 65%, #9e6a06 100%);
-    box-shadow:
-      inset 0 0 0 2px rgba(255,255,255,.45),
-      inset 0 -6px 12px rgba(80,40,0,.25),
-      0 1px 3px rgba(160,100,0,.3);
-  }
-  .tile.gold {
-    box-shadow: 0 0 0 2px #e7b324, 0 2px 8px rgba(231,179,36,.35);
-  }
-
-  /* Icon content inside the coin */
-  .coin svg.ico {
-    width: 36%;
-    height: 36%;
-    margin-bottom: 1px;
-    filter: drop-shadow(0 1px 0 rgba(0,0,0,.2));
-  }
-
-  /* Emoji badge */
-  .badge-emoji {
-    position: absolute;
-    top: -2px; left: -2px;
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    background: #f7c948;
-    border: 2px solid #fff;
-    display: grid; place-items: center;
-    font-size: 14px;
-    line-height: 1;
-    box-shadow: 0 1px 2px rgba(0,0,0,.15);
-  }
-
-  /* Surprise overlay */
-  .toast {
-    position: fixed;
-    left: 50%;
-    bottom: 32px;
-    transform: translateX(-50%) translateY(20px);
-    background: #111;
-    color: #fff;
-    padding: 12px 18px;
-    border-radius: 999px;
-    font-size: 14px;
+  .kcol-head b { font-size: 13px; }
+  .kcol-head .count {
+    background: var(--ink-3);
+    color: var(--muted-2);
+    font-size: 11px;
     font-weight: 600;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .25s ease, transform .25s ease;
-    z-index: 20;
-    box-shadow: 0 6px 20px rgba(0,0,0,.25);
+    padding: 2px 8px;
+    border-radius: 999px;
   }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .kstage-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+  .kcard {
+    background: linear-gradient(180deg, #1b212c 0%, #161b22 100%);
+    border: 1px solid var(--line-2);
+    border-radius: 12px;
+    padding: 12px;
+    cursor: grab;
+    transition: transform .15s, box-shadow .15s, border-color .15s;
+  }
+  .kcard:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 20px -10px rgba(0,0,0,.6); }
+  .kcard.dragging { opacity: .5; transform: rotate(2deg); }
+  .kcard-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .kcard .ava {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    display: grid; place-items: center;
+    font-size: 12px; font-weight: 700; color: #fff;
+  }
+  .kcard-name { font-size: 13px; font-weight: 600; line-height: 1.2; }
+  .kcard-role { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .kcard-meta {
+    display: flex; align-items: center; gap: 6px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    background: rgba(255,255,255,.06);
+    color: var(--muted-2);
+    padding: 3px 7px;
+    border-radius: 5px;
+    font-weight: 600;
+  }
+  .tag.gold { background: rgba(212,166,87,.16); color: var(--gold-2); }
+  .tag.stale { background: rgba(255,111,111,.16); color: var(--bad); }
+  .kcard-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 10px; font-size: 11px; color: var(--muted);
+  }
 
-  /* Reset button (subtle) */
-  .reset {
-    display: block;
-    margin: 18px auto 0;
-    background: none;
-    border: 0;
-    color: var(--muted);
-    font-size: 13px;
+  /* ---------- Candidates view ---------- */
+  .filters {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;
+  }
+  .filter {
+    background: var(--ink-2);
+    border: 1px solid var(--line-2);
+    border-radius: 10px;
     padding: 8px 12px;
+    font-size: 13px;
+    color: var(--muted-2);
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: border-color .15s, color .15s;
+  }
+  .filter:hover { color: #fff; border-color: var(--gold); }
+  .filter.active { color: var(--gold-2); border-color: var(--gold); background: rgba(212,166,87,.08); }
+  .filter svg { width: 14px; height: 14px; }
+
+  .candidate-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .ccard {
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px;
+    transition: transform .15s, border-color .15s, box-shadow .15s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .ccard:hover {
+    border-color: var(--gold);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+  }
+  .ccard-head { display: flex; gap: 12px; align-items: center; }
+  .ccard-head .ava {
+    width: 48px; height: 48px;
+    border-radius: 14px;
+    display: grid; place-items: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .ccard-name { font-size: 15px; font-weight: 600; }
+  .ccard-role { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .ccard-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 10px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .ccard-stat { text-align: center; }
+  .ccard-stat b { display: block; font-size: 14px; }
+  .ccard-stat small { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .ccard-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  /* ---------- Upload view ---------- */
+  .upload-wrap { max-width: 720px; margin: 0 auto; }
+  .dropzone {
+    border: 2px dashed var(--line-2);
+    border-radius: 18px;
+    padding: 48px 24px;
+    text-align: center;
+    transition: border-color .15s, background .15s;
     cursor: pointer;
   }
+  .dropzone:hover, .dropzone.over {
+    border-color: var(--gold);
+    background: rgba(212,166,87,.06);
+  }
+  .dropzone svg { width: 48px; height: 48px; color: var(--gold-2); margin-bottom: 12px; }
+  .dropzone h3 { margin: 0 0 6px; font-size: 18px; }
+  .dropzone p { margin: 0; color: var(--muted); font-size: 13px; }
+  .channels {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 22px;
+  }
+  @media (max-width: 700px) { .channels { grid-template-columns: 1fr; } }
+  .channel {
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .channel-ico {
+    width: 42px; height: 42px;
+    border-radius: 11px;
+    background: rgba(212,166,87,.14);
+    color: var(--gold-2);
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .channel-ico svg { width: 22px; height: 22px; }
+  .channel b { font-size: 14px; }
+  .channel p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
 
-  /* Not yet picked tiles stay silver; picked = gold */
-  .tile.dim .coin { filter: grayscale(.05) brightness(.98); }
-
-  /* Confetti burst */
-  .confetti {
+  /* ---------- Toast ---------- */
+  .toast {
     position: fixed;
-    top: 0; left: 0;
-    width: 9px; height: 14px;
-    border-radius: 2px;
+    left: 50%; bottom: 32px;
+    transform: translate(-50%, 20px);
+    background: var(--ink-3);
+    border: 1px solid var(--gold);
+    color: var(--paper);
+    padding: 12px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0;
     pointer-events: none;
+    transition: opacity .2s, transform .2s;
     z-index: 50;
-    will-change: transform, opacity;
-    animation: confetti-fly 1500ms ease-out forwards;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,.6);
   }
-  @keyframes confetti-fly {
-    0%   { transform: translate(var(--x), var(--y)) rotate(0deg); opacity: 1; }
-    70%  { opacity: 1; }
-    100% {
-      transform:
-        translate(calc(var(--x) + var(--dx)), calc(var(--y) + var(--dy) + 260px))
-        rotate(var(--rot));
-      opacity: 0;
-    }
-  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
-  @media (max-width: 360px) {
-    .coin .val { font-size: 17px; }
-    .coin .sym { font-size: 12px; }
+  /* ---------- Tenant menu ---------- */
+  .tenant-menu {
+    position: absolute;
+    top: 64px; left: 28px;
+    background: var(--ink-2);
+    border: 1px solid var(--line-2);
+    border-radius: 12px;
+    padding: 8px;
+    min-width: 280px;
+    box-shadow: var(--shadow-lg);
+    z-index: 20;
+    display: none;
+    flex-direction: column;
+    gap: 4px;
   }
+  .tenant-menu.open { display: flex; }
+  .tenant-option {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .tenant-option:hover { background: rgba(255,255,255,.04); }
+  .tenant-option .tenant-logo { width: 26px; height: 26px; font-size: 11px; }
+  .tenant-option small { display: block; color: var(--muted); font-size: 11px; margin-top: 1px; }
+
+  .empty { text-align: center; padding: 40px 20px; color: var(--muted); }
+  .heading-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; gap: 16px; flex-wrap: wrap; }
+
+  /* ---------- Hot-pink top accent (kept subtle) ---------- */
+  .topbar::after {
+    content: "";
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .topbar { position: relative; }
 </style>
 </head>
 <body>
-  <div class="app">
-    <!-- Header -->
+<div class="shell">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">H</div>
+      <div class="brand-text">
+        <b>Hospitality Talent</b>
+        <span>Cloud · v1.0</span>
+      </div>
+    </div>
+
+    <nav class="nav-section">
+      <div class="nav-label">Workspace</div>
+      <div class="nav-item active" data-view="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" data-view="pipeline">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="4" height="16"/><rect x="10" y="4" width="4" height="10"/><rect x="17" y="4" width="4" height="13"/></svg>
+        Pipeline
+        <span class="nav-badge">312</span>
+      </div>
+      <div class="nav-item" data-view="candidates">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Candidates
+        <span class="nav-badge">1.2k</span>
+      </div>
+      <div class="nav-item" data-view="jobs">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        Open roles
+        <span class="nav-badge">47</span>
+      </div>
+      <div class="nav-item" data-view="upload">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Import talent
+      </div>
+    </nav>
+
+    <nav class="nav-section">
+      <div class="nav-label">Insight</div>
+      <div class="nav-item" data-view="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-7"/></svg>
+        Analytics
+      </div>
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Properties
+      </div>
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="avatar">RM</div>
+      <div style="min-width:0;flex:1;">
+        <b style="font-size:13px;display:block;">Rachel Mensah</b>
+        <small>Group HR Director</small>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <!-- ====== TOP BAR ====== -->
     <header class="topbar">
-      <button class="icon-btn" aria-label="Back">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-      </button>
-      <div class="title">Play the gameboard</div>
-      <button class="icon-btn" aria-label="Share">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><path d="M7 8l5-5 5 5"/><path d="M5 21h14"/></svg>
-      </button>
+      <div class="tenant-switch" id="tenantSwitch">
+        <div class="tenant-logo" id="tenantLogo">AH</div>
+        <div class="tenant-info">
+          <b id="tenantName">Aurora Hotels</b>
+          <span id="tenantMeta">28 properties · EMEA</span>
+        </div>
+        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+
+      <div class="tenant-menu" id="tenantMenu">
+        <div class="tenant-option" data-tenant="aurora">
+          <div class="tenant-logo">AH</div>
+          <div><b>Aurora Hotels</b><small>28 properties · EMEA</small></div>
+        </div>
+        <div class="tenant-option" data-tenant="meridian">
+          <div class="tenant-logo" style="background:#6c8cff;color:#fff">MR</div>
+          <div><b>Meridian Resorts</b><small>14 properties · APAC</small></div>
+        </div>
+        <div class="tenant-option" data-tenant="sable">
+          <div class="tenant-logo" style="background:#1b1b1b;color:#fff;border:1px solid #444">SC</div>
+          <div><b>Sable Collection</b><small>6 properties · Americas</small></div>
+        </div>
+      </div>
+
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="globalSearch" type="text" placeholder="Search candidates, roles, properties…" />
+        <kbd>⌘K</kbd>
+      </div>
+
+      <div class="top-actions">
+        <button class="icon-btn-bare" title="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </button>
+        <button class="btn btn-ghost" id="exportBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export
+        </button>
+        <button class="btn btn-primary" id="newRoleBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New role
+        </button>
+      </div>
     </header>
 
-    <!-- Stats pills -->
-    <div class="stats">
-      <div class="pill">
-        <span class="grid-ico" aria-hidden="true">
-          <i></i><i></i><i></i>
-          <i></i><i></i><i></i>
-          <i></i><i></i><i></i>
-        </span>
-        <span id="playCount">0 plays</span>
+    <!-- ====== DASHBOARD VIEW ====== -->
+    <section class="view active" id="view-dashboard">
+      <div class="view-head">
+        <div>
+          <h1 id="dashGreeting">Good morning, Rachel</h1>
+          <p id="dashSub">28 properties · 47 open roles · 312 candidates moving through your pipeline.</p>
+        </div>
+        <div class="scope-chips">
+          <div class="scope-chip active" data-scope="group">Whole group</div>
+          <div class="scope-chip" data-scope="luxury">Luxury brand</div>
+          <div class="scope-chip" data-scope="select">Select-service</div>
+          <div class="scope-chip" data-scope="7d">Last 7 days</div>
+          <div class="scope-chip" data-scope="30d">Last 30 days</div>
+        </div>
       </div>
-      <div class="pill">
-        <span class="coin-ico">Đ</span>
-        <span id="balance">77,883</span>
+
+      <!-- KPI cards -->
+      <div class="kpis">
+        <div class="kpi">
+          <div class="label">Active candidates</div>
+          <div class="value" data-counter="1242">0</div>
+          <div class="delta">▲ 12.4% vs last month</div>
+          <svg class="spark" viewBox="0 0 100 32" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#d4a657" stroke-width="2" points="0,24 12,20 24,22 36,16 48,18 60,10 72,12 84,6 100,4"/>
+          </svg>
+        </div>
+        <div class="kpi">
+          <div class="label">Open roles</div>
+          <div class="value" data-counter="47">0</div>
+          <div class="delta">▲ 6 new this week</div>
+          <svg class="spark" viewBox="0 0 100 32" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#d4a657" stroke-width="2" points="0,16 12,18 24,14 36,18 48,12 60,14 72,10 84,12 100,8"/>
+          </svg>
+        </div>
+        <div class="kpi">
+          <div class="label">Time-to-hire (median)</div>
+          <div class="value"><span data-counter="18">0</span><span style="font-size:18px;color:var(--muted)">d</span></div>
+          <div class="delta down">▼ 2 days vs target</div>
+          <svg class="spark" viewBox="0 0 100 32" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#ff6f6f" stroke-width="2" points="0,8 12,12 24,14 36,12 48,16 60,18 72,16 84,20 100,22"/>
+          </svg>
+        </div>
+        <div class="kpi">
+          <div class="label">Offer acceptance</div>
+          <div class="value"><span data-counter="89">0</span>%</div>
+          <div class="delta flat">▬ steady at 89%</div>
+          <svg class="spark" viewBox="0 0 100 32" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#5cc98f" stroke-width="2" points="0,12 12,14 24,10 36,12 48,14 60,10 72,12 84,10 100,12"/>
+          </svg>
+        </div>
       </div>
-    </div>
 
-    <!-- Heading -->
-    <div class="heading">
-      <h1>Gameboard<br/><span id="boardDate">Wednesday 08 April</span></h1>
-      <div class="played" id="playedLine">Played on Saturday 11 April at 15:24</div>
-    </div>
+      <!-- Funnel + Sources -->
+      <div class="grid-2" style="margin-bottom:16px;">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Pipeline funnel</h3>
+              <p class="sub">Conversion between every stage, last 90 days.</p>
+            </div>
+            <div class="scope-chip active" style="cursor:default;">90 days</div>
+          </div>
+          <div class="funnel" id="funnel">
+            <div class="funnel-row"><span class="stage">Sourced</span><div class="funnel-bar"><i style="width:100%"></i></div><span class="count">1,242</span><span class="conv">—</span></div>
+            <div class="funnel-row"><span class="stage">Screened</span><div class="funnel-bar s2"><i style="width:62%"></i></div><span class="count">771</span><span class="conv">↓ 62%</span></div>
+            <div class="funnel-row"><span class="stage">Interview</span><div class="funnel-bar s3"><i style="width:31%"></i></div><span class="count">385</span><span class="conv">↓ 50%</span></div>
+            <div class="funnel-row"><span class="stage">Offer</span><div class="funnel-bar s4"><i style="width:13%"></i></div><span class="count">162</span><span class="conv">↓ 42%</span></div>
+            <div class="funnel-row"><span class="stage">Hired</span><div class="funnel-bar s5"><i style="width:11%"></i></div><span class="count">144</span><span class="conv">↓ 89%</span></div>
+          </div>
+        </div>
 
-    <!-- Board -->
-    <div class="board">
-      <div class="grid" id="grid">
-        <button type="button" class="tile" data-v="200"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">200</span></div></div></button>
-        <button type="button" class="tile" data-v="155"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">155</span></div></div></button>
-        <button type="button" class="tile" data-v="155"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">155</span></div></div></button>
-        <button type="button" class="tile" data-v="1000"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">1,000</span></div></div></button>
-
-        <button type="button" class="tile" data-v="1000"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">1,000</span></div></div></button>
-        <button type="button" class="tile" data-v="250"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">250</span></div></div></button>
-        <button type="button" class="tile" data-v="155"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">155</span></div></div></button>
-        <button type="button" class="tile" data-v="175"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">175</span></div></div></button>
-
-        <button type="button" class="tile" data-v="155"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">155</span></div></div></button>
-        <button type="button" class="tile" data-v="150"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">150</span></div></div></button>
-        <button type="button" class="tile" data-v="225"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">225</span></div></div></button>
-        <button type="button" class="tile" data-v="150"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">150</span></div></div></button>
-
-        <button type="button" class="tile" data-v="160"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">160</span></div></div></button>
-        <button type="button" class="tile" data-v="100"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">100</span></div></div></button>
-        <button type="button" class="tile" data-v="583"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">583</span></div></div></button>
-        <button type="button" class="tile" data-v="1000"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">1,000</span></div></div></button>
-
-        <button type="button" class="tile" data-v="175"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">175</span></div></div></button>
-        <button type="button" class="tile" data-v="150"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">150</span></div></div></button>
-        <button type="button" class="tile" data-v="500"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">500</span></div></div></button>
-        <button type="button" class="tile" data-v="150"><div class="coin shape-circle"><div class="label"><span class="sym">Đ</span><span class="val">150</span></div></div></button>
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Hire sources</h3>
+              <p class="sub">Where last quarter's hires came from.</p>
+            </div>
+          </div>
+          <div class="donut-wrap">
+            <svg width="160" height="160" viewBox="0 0 42 42">
+              <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#262d39" stroke-width="6"/>
+              <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#d4a657" stroke-width="6" stroke-dasharray="38 62" stroke-dashoffset="25" transform="rotate(-90 21 21)"/>
+              <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#6c8cff" stroke-width="6" stroke-dasharray="22 78" stroke-dashoffset="-13" transform="rotate(-90 21 21)"/>
+              <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#5cc98f" stroke-width="6" stroke-dasharray="18 82" stroke-dashoffset="-35" transform="rotate(-90 21 21)"/>
+              <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#ffb74a" stroke-width="6" stroke-dasharray="12 88" stroke-dashoffset="-53" transform="rotate(-90 21 21)"/>
+              <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#b25cff" stroke-width="6" stroke-dasharray="10 90" stroke-dashoffset="-65" transform="rotate(-90 21 21)"/>
+              <text x="21" y="20" text-anchor="middle" fill="#fff" font-size="6" font-weight="700">144</text>
+              <text x="21" y="26" text-anchor="middle" fill="#8a93a3" font-size="3">hires Q1</text>
+            </svg>
+            <div class="donut-legend">
+              <div class="legend-row"><span class="swatch" style="background:#d4a657"></span> Referral <span class="pct">38%</span></div>
+              <div class="legend-row"><span class="swatch" style="background:#6c8cff"></span> Career site <span class="pct">22%</span></div>
+              <div class="legend-row"><span class="swatch" style="background:#5cc98f"></span> LinkedIn <span class="pct">18%</span></div>
+              <div class="legend-row"><span class="swatch" style="background:#ffb74a"></span> Agency <span class="pct">12%</span></div>
+              <div class="legend-row"><span class="swatch" style="background:#b25cff"></span> Internal <span class="pct">10%</span></div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <button class="reset" id="resetBtn">Reset</button>
-  </div>
+      <!-- Hires by property + Activity + Spotlight -->
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Hires by property</h3>
+              <p class="sub">Top performers this quarter.</p>
+            </div>
+          </div>
+          <div class="bars">
+            <div class="bar-row"><span>Aurora Lisbon</span><div class="bar-track"><i style="width:100%"></i></div><span class="num">28</span></div>
+            <div class="bar-row"><span>Aurora Cape Town</span><div class="bar-track"><i style="width:82%"></i></div><span class="num">23</span></div>
+            <div class="bar-row"><span>Aurora Edinburgh</span><div class="bar-track"><i style="width:68%"></i></div><span class="num">19</span></div>
+            <div class="bar-row"><span>Aurora Marrakech</span><div class="bar-track"><i style="width:54%"></i></div><span class="num">15</span></div>
+            <div class="bar-row"><span>Aurora Reykjavik</span><div class="bar-track"><i style="width:43%"></i></div><span class="num">12</span></div>
+            <div class="bar-row"><span>Aurora Florence</span><div class="bar-track"><i style="width:39%"></i></div><span class="num">11</span></div>
+            <div class="bar-row"><span>Aurora Vienna</span><div class="bar-track"><i style="width:32%"></i></div><span class="num">9</span></div>
+          </div>
+        </div>
 
-  <div class="toast" id="toast">You won Đ175!</div>
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Recent activity</h3>
+              <p class="sub">Live across the group.</p>
+            </div>
+          </div>
+          <div class="feed">
+            <div class="feed-item"><span class="feed-dot"></span><div class="feed-text"><b>Amara Osei</b> moved to <b>Offer</b><span class="meta">Head Sommelier · Aurora Cape Town</span></div><span class="feed-time">2m</span></div>
+            <div class="feed-item"><span class="feed-dot"></span><div class="feed-text">New application from <b>Jonas Lindqvist</b><span class="meta">Front Office Manager · Aurora Reykjavik</span></div><span class="feed-time">14m</span></div>
+            <div class="feed-item"><span class="feed-dot"></span><div class="feed-text"><b>Priya Raman</b> accepted offer<span class="meta">Executive Sous Chef · Aurora Lisbon</span></div><span class="feed-time">1h</span></div>
+            <div class="feed-item"><span class="feed-dot"></span><div class="feed-text">Interview scheduled for <b>Diego Costa</b><span class="meta">Guest Relations Lead · Aurora Florence</span></div><span class="feed-time">3h</span></div>
+            <div class="feed-item"><span class="feed-dot"></span><div class="feed-text">312 candidates imported from <b>greenhouse.csv</b><span class="meta">by Tomás Reyes · Recruiter</span></div><span class="feed-time">5h</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Top candidates</h3>
+              <p class="sub">Highest fit-score in Screened / Interview.</p>
+            </div>
+          </div>
+          <div class="spotlight" id="spotlight"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== PIPELINE / KANBAN VIEW ====== -->
+    <section class="view" id="view-pipeline">
+      <div class="view-head">
+        <div>
+          <h1>Pipeline</h1>
+          <p>Drag any card between columns to move a candidate through stages. Every move is logged.</p>
+        </div>
+        <div class="scope-chips">
+          <div class="scope-chip active">All properties</div>
+          <div class="scope-chip">Front of house</div>
+          <div class="scope-chip">Kitchen</div>
+          <div class="scope-chip">Management</div>
+          <div class="scope-chip">Spa &amp; wellness</div>
+        </div>
+      </div>
+
+      <div class="kanban" id="kanban"></div>
+    </section>
+
+    <!-- ====== CANDIDATES VIEW ====== -->
+    <section class="view" id="view-candidates">
+      <div class="view-head">
+        <div>
+          <h1>Candidates</h1>
+          <p>Search and filter every person in your talent pool. Click any card to open the full profile.</p>
+        </div>
+      </div>
+
+      <div class="filters">
+        <div class="filter active" data-filter="all">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>
+          All <span style="opacity:.6">(1,242)</span>
+        </div>
+        <div class="filter" data-filter="front">Front of house</div>
+        <div class="filter" data-filter="kitchen">Kitchen</div>
+        <div class="filter" data-filter="management">Management</div>
+        <div class="filter" data-filter="spa">Spa &amp; wellness</div>
+        <div class="filter" data-filter="bilingual">🌍 Bilingual</div>
+        <div class="filter" data-filter="immediate">⚡ Available now</div>
+      </div>
+
+      <div class="candidate-grid" id="candidateGrid"></div>
+    </section>
+
+    <!-- ====== JOBS VIEW ====== -->
+    <section class="view" id="view-jobs">
+      <div class="view-head">
+        <div>
+          <h1>Open roles</h1>
+          <p>47 approved requisitions across the group. Click any role to see its shortlist.</p>
+        </div>
+        <button class="btn btn-primary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Raise requisition</button>
+      </div>
+
+      <div class="candidate-grid" id="jobsGrid"></div>
+    </section>
+
+    <!-- ====== UPLOAD VIEW ====== -->
+    <section class="view" id="view-upload">
+      <div class="view-head">
+        <div>
+          <h1>Import your talent pipeline</h1>
+          <p>Bring your existing candidate data into the portal. We'll de-duplicate and map fields for you.</p>
+        </div>
+      </div>
+
+      <div class="upload-wrap">
+        <div class="dropzone" id="dropzone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <h3>Drop your CSV, Excel, or zipped CVs here</h3>
+          <p>Up to 50,000 rows per file · PDF and DOCX CVs supported · field mapping is saved for future uploads</p>
+        </div>
+
+        <div class="channels">
+          <div class="channel">
+            <div class="channel-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div><b>CSV &amp; Excel</b><p>Map your columns once, re-use forever.</p></div>
+          </div>
+          <div class="channel">
+            <div class="channel-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></div>
+            <div><b>Bulk CV upload</b><p>Auto-parse PDF / DOCX into structured fields.</p></div>
+          </div>
+          <div class="channel">
+            <div class="channel-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+            <div><b>API import</b><p>Workday, Greenhouse, Lever, SmartRecruiters.</p></div>
+          </div>
+          <div class="channel">
+            <div class="channel-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div>
+            <div><b>Add manually</b><p>For walk-ins and referrals — one candidate at a time.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="toast" id="toast">Saved</div>
 
 <script>
-  (function () {
-    var toast = document.getElementById('toast');
-    var playCountEl = document.getElementById('playCount');
-    var balanceEl = document.getElementById('balance');
-    var playedLineEl = document.getElementById('playedLine');
-    var resetBtn = document.getElementById('resetBtn');
-    var tiles = document.querySelectorAll('.tile');
+(function(){
+  // ---------- Tenant data ----------
+  const TENANTS = {
+    aurora: { logo:'AH', name:'Aurora Hotels', meta:'28 properties · EMEA', color:'#d4a657' },
+    meridian:{ logo:'MR', name:'Meridian Resorts', meta:'14 properties · APAC', color:'#6c8cff' },
+    sable:  { logo:'SC', name:'Sable Collection', meta:'6 properties · Americas', color:'#1b1b1b' }
+  };
 
-    var picked = false;
-    var plays = 0;
-    var balance = 77883;
+  // ---------- Demo candidates ----------
+  const CANDIDATES = [
+    { id:1, name:'Amara Osei', role:'Head Sommelier', prop:'Aurora Cape Town', stage:'offer', score:94, tags:['kitchen'], yrs:9, lang:['EN','FR','TW'], avail:'2 weeks' },
+    { id:2, name:'Jonas Lindqvist', role:'Front Office Manager', prop:'Aurora Reykjavik', stage:'sourced', score:78, tags:['front','bilingual'], yrs:6, lang:['EN','SE','IS'], avail:'1 month' },
+    { id:3, name:'Priya Raman', role:'Executive Sous Chef', prop:'Aurora Lisbon', stage:'hired', score:91, tags:['kitchen'], yrs:11, lang:['EN','HI','PT'], avail:'Available now' },
+    { id:4, name:'Diego Costa', role:'Guest Relations Lead', prop:'Aurora Florence', stage:'interview', score:86, tags:['front','bilingual','immediate'], yrs:5, lang:['EN','IT','ES','PT'], avail:'Available now' },
+    { id:5, name:'Yuki Tanaka', role:'Spa Director', prop:'Aurora Vienna', stage:'screened', score:88, tags:['spa','management'], yrs:8, lang:['EN','JA','DE'], avail:'2 weeks' },
+    { id:6, name:'Léa Bertrand', role:'Pastry Chef', prop:'Aurora Lisbon', stage:'interview', score:82, tags:['kitchen'], yrs:7, lang:['EN','FR','PT'], avail:'3 weeks' },
+    { id:7, name:'Kwame Asante', role:'Concierge', prop:'Aurora Marrakech', stage:'screened', score:80, tags:['front','bilingual','immediate'], yrs:4, lang:['EN','FR','AR','TW'], avail:'Available now' },
+    { id:8, name:'Mei-Ling Chen', role:'Revenue Manager', prop:'Aurora Edinburgh', stage:'sourced', score:84, tags:['management'], yrs:9, lang:['EN','ZH'], avail:'1 month' },
+    { id:9, name:'Oluwaseun Adebayo', role:'Restaurant General Manager', prop:'Aurora Lagos', stage:'offer', score:90, tags:['management','front'], yrs:12, lang:['EN','YO'], avail:'2 weeks' },
+    { id:10,name:'Sofia Pereira', role:'Wellness Therapist', prop:'Aurora Lisbon', stage:'sourced', score:74, tags:['spa','immediate'], yrs:3, lang:['EN','PT','ES'], avail:'Available now' },
+    { id:11,name:'Henrik Berg', role:'Bar Manager', prop:'Aurora Reykjavik', stage:'screened', score:79, tags:['front'], yrs:6, lang:['EN','SE','IS'], avail:'2 weeks' },
+    { id:12,name:'Aisha Khalid', role:'Head of Housekeeping', prop:'Aurora Marrakech', stage:'interview', score:85, tags:['management'], yrs:10, lang:['EN','AR','FR'], avail:'1 month' }
+  ];
 
-    function fmt(n) { return n.toLocaleString('en-US'); }
+  const STAGES = [
+    { id:'sourced',   name:'Sourced',   color:'#8a93a3' },
+    { id:'screened',  name:'Screened',  color:'#6c8cff' },
+    { id:'interview', name:'Interview', color:'#ffb74a' },
+    { id:'offer',     name:'Offer',     color:'#d4a657' },
+    { id:'hired',     name:'Hired',     color:'#5cc98f' }
+  ];
 
-    // Pool of prize values; same count and distribution as the original
-    // board. Shuffled on every reset so each round is a new surprise.
-    var VALUES = [
-      200, 155, 155, 1000,
-      1000, 250, 155, 175,
-      155, 150, 225, 150,
-      160, 100, 583, 1000,
-      175, 150, 500, 150
-    ];
+  const JOBS = [
+    { title:'Head Sommelier', prop:'Aurora Cape Town', tags:['urgent','kitchen'], days:4, shortlist:6 },
+    { title:'Front Office Manager', prop:'Aurora Reykjavik', tags:['front'], days:12, shortlist:9 },
+    { title:'Executive Sous Chef', prop:'Aurora Lisbon', tags:['kitchen'], days:2, shortlist:11 },
+    { title:'Guest Relations Lead', prop:'Aurora Florence', tags:['front','bilingual'], days:7, shortlist:5 },
+    { title:'Spa Director', prop:'Aurora Vienna', tags:['spa','management'], days:18, shortlist:3 },
+    { title:'Pastry Chef', prop:'Aurora Lisbon', tags:['kitchen'], days:9, shortlist:7 },
+    { title:'Concierge', prop:'Aurora Marrakech', tags:['front','bilingual'], days:5, shortlist:4 },
+    { title:'Restaurant GM', prop:'Aurora Lagos', tags:['management','urgent'], days:21, shortlist:2 }
+  ];
 
-    function shuffle(arr) {
-      var a = arr.slice();
-      for (var i = a.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
-      }
-      return a;
+  // ---------- Utility ----------
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+  const initialsOf = (s) => s.split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase();
+  const colors = ['#6c8cff','#b25cff','#5cc98f','#ffb74a','#ff6f6f','#4ecdc4','#d4a657','#f06292'];
+  const colorFor = (s) => { let h=0; for (let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0; return colors[h%colors.length]; };
+
+  // ---------- View switching ----------
+  $$('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const view = item.dataset.view;
+      if (!view) return;
+      $$('.nav-item').forEach(n => n.classList.remove('active'));
+      item.classList.add('active');
+      $$('.view').forEach(v => v.classList.remove('active'));
+      $('#view-'+view)?.classList.add('active');
+    });
+  });
+
+  // ---------- Tenant menu ----------
+  const tenantSwitch = $('#tenantSwitch');
+  const tenantMenu = $('#tenantMenu');
+  tenantSwitch.addEventListener('click', (e) => {
+    e.stopPropagation();
+    tenantMenu.classList.toggle('open');
+  });
+  document.addEventListener('click', () => tenantMenu.classList.remove('open'));
+  $$('.tenant-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      const t = TENANTS[opt.dataset.tenant];
+      $('#tenantLogo').textContent = t.logo;
+      $('#tenantLogo').style.background = t.color;
+      $('#tenantLogo').style.color = opt.dataset.tenant==='sable' ? '#fff' : '#2a1d05';
+      $('#tenantName').textContent = t.name;
+      $('#tenantMeta').textContent = t.meta;
+      tenantMenu.classList.remove('open');
+      showToast('Switched to '+t.name);
+    });
+  });
+
+  // ---------- Animated counters ----------
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.counter, 10);
+    const dur = 900;
+    const start = performance.now();
+    function step(t){
+      const p = Math.min(1, (t-start)/dur);
+      const v = Math.floor(target * (1 - Math.pow(1-p, 3)));
+      el.textContent = v.toLocaleString('en-US');
+      if (p<1) requestAnimationFrame(step);
     }
+    requestAnimationFrame(step);
+  }
+  $$('[data-counter]').forEach(animateCounter);
 
-    function applyValues(values) {
-      tiles.forEach(function (el, i) {
-        var v = values[i];
-        el.setAttribute('data-v', v);
-        var val = el.querySelector('.val');
-        if (val) val.textContent = fmt(v);
-      });
-    }
-
-    function updatePlayedLine() {
-      var now = new Date();
-      var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-      var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-      var hh = String(now.getHours()).padStart(2,'0');
-      var mm = String(now.getMinutes()).padStart(2,'0');
-      playedLineEl.textContent = 'Played on ' + days[now.getDay()] + ' ' + now.getDate() + ' ' + months[now.getMonth()] + ' at ' + hh + ':' + mm;
-    }
-
-    var CONFETTI_COLORS = ['#ff4d6d','#ffa62b','#ffd23f','#2ec4b6','#3a86ff','#b5179e','#8ac926'];
-    function fireConfetti(originEl) {
-      var rect = originEl.getBoundingClientRect();
-      var cx = rect.left + rect.width / 2;
-      var cy = rect.top + rect.height / 2;
-      var count = 48;
-      for (var i = 0; i < count; i++) {
-        var p = document.createElement('div');
-        p.className = 'confetti';
-        var angle = (Math.PI * 2 * i) / count + Math.random() * 0.4;
-        var speed = 90 + Math.random() * 180;
-        var dx = Math.cos(angle) * speed;
-        var dy = Math.sin(angle) * speed - 80; // bias upward
-        p.style.setProperty('--x', cx + 'px');
-        p.style.setProperty('--y', cy + 'px');
-        p.style.setProperty('--dx', dx + 'px');
-        p.style.setProperty('--dy', dy + 'px');
-        p.style.setProperty('--rot', (Math.random() * 900 - 450) + 'deg');
-        p.style.background = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
-        p.style.animationDelay = (Math.random() * 60) + 'ms';
-        document.body.appendChild(p);
-        (function (node) {
-          setTimeout(function () { if (node.parentNode) node.parentNode.removeChild(node); }, 1800);
-        })(p);
-      }
-    }
-
-    function pickTile(tileEl) {
-      if (picked) return;
-      picked = true;
-      var value = parseInt(tileEl.getAttribute('data-v'), 10) || 0;
-
-      // Reveal every tile; mark the picked one gold.
-      tiles.forEach(function (el) { el.classList.add('revealed'); });
-      tileEl.classList.add('gold');
-
-      fireConfetti(tileEl);
-
-      plays += 1;
-      balance += value;
-      playCountEl.textContent = plays + (plays === 1 ? ' play' : ' plays');
-      balanceEl.textContent = fmt(balance);
-      updatePlayedLine();
-
-      toast.textContent = 'You won \u0110' + fmt(value) + '!';
-      toast.classList.add('show');
-      setTimeout(function () { toast.classList.remove('show'); }, 2400);
-
-      if (navigator.vibrate) navigator.vibrate([15, 40, 15]);
-    }
-
-    tiles.forEach(function (el) {
-      el.addEventListener('click', function () { pickTile(el); });
+  // ---------- Spotlight ----------
+  const spotlight = $('#spotlight');
+  CANDIDATES
+    .filter(c => c.stage==='screened' || c.stage==='interview')
+    .sort((a,b) => b.score - a.score)
+    .slice(0,5)
+    .forEach(c => {
+      const div = document.createElement('div');
+      div.className = 'spot-card';
+      div.innerHTML = `
+        <div class="ava" style="background:${colorFor(c.name)}">${initialsOf(c.name)}</div>
+        <div>
+          <div class="spot-name">${c.name}</div>
+          <div class="spot-role">${c.role} · ${c.prop}</div>
+        </div>
+        <div class="score" style="--p:${c.score}"><span>${c.score}</span></div>
+      `;
+      spotlight.appendChild(div);
     });
 
-    resetBtn.addEventListener('click', function () {
-      picked = false;
-      tiles.forEach(function (el) {
-        el.classList.remove('gold', 'revealed');
-      });
-      // Randomise the prize layout for the next round.
-      applyValues(shuffle(VALUES));
-      toast.classList.remove('show');
+  // ---------- Kanban ----------
+  const kanban = $('#kanban');
+  STAGES.forEach(stage => {
+    const col = document.createElement('div');
+    col.className = 'kcol';
+    col.dataset.stage = stage.id;
+    const cards = CANDIDATES.filter(c => c.stage===stage.id);
+    col.innerHTML = `
+      <div class="kcol-head">
+        <b><span class="kstage-dot" style="background:${stage.color}"></span>${stage.name}</b>
+        <span class="count">${cards.length}</span>
+      </div>
+    `;
+    cards.forEach(c => col.appendChild(makeKCard(c)));
+    kanban.appendChild(col);
+    setupDropZone(col);
+  });
+
+  function makeKCard(c) {
+    const days = Math.floor(Math.random()*14)+1;
+    const stale = days > 7;
+    const card = document.createElement('div');
+    card.className = 'kcard';
+    card.draggable = true;
+    card.dataset.id = c.id;
+    card.innerHTML = `
+      <div class="kcard-top">
+        <div class="ava" style="background:${colorFor(c.name)}">${initialsOf(c.name)}</div>
+        <div style="min-width:0;flex:1">
+          <div class="kcard-name">${c.name}</div>
+          <div class="kcard-role">${c.role}</div>
+        </div>
+      </div>
+      <div class="kcard-meta">
+        <span class="tag gold">${c.score} fit</span>
+        ${stale ? '<span class="tag stale">stale</span>' : ''}
+        <span class="tag">${c.prop.replace('Aurora ','')}</span>
+      </div>
+      <div class="kcard-foot">
+        <span>${days}d in stage</span>
+        <span>${c.lang.join(' · ')}</span>
+      </div>
+    `;
+    card.addEventListener('dragstart', (e) => {
+      card.classList.add('dragging');
+      e.dataTransfer.setData('text/plain', c.id);
+      e.dataTransfer.effectAllowed = 'move';
     });
-  })();
+    card.addEventListener('dragend', () => card.classList.remove('dragging'));
+    return card;
+  }
+
+  function setupDropZone(col) {
+    col.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      col.classList.add('drag-over');
+    });
+    col.addEventListener('dragleave', () => col.classList.remove('drag-over'));
+    col.addEventListener('drop', (e) => {
+      e.preventDefault();
+      col.classList.remove('drag-over');
+      const id = parseInt(e.dataTransfer.getData('text/plain'), 10);
+      const card = $(`.kcard[data-id="${id}"]`);
+      if (!card) return;
+      const fromCol = card.closest('.kcol');
+      col.appendChild(card);
+      // update counts
+      [fromCol, col].forEach(c => {
+        const n = $$('.kcard', c).length;
+        $('.count', c).textContent = n;
+      });
+      const cand = CANDIDATES.find(c => c.id===id);
+      const newStage = STAGES.find(s => s.id===col.dataset.stage);
+      if (cand && newStage && cand.stage !== newStage.id) {
+        cand.stage = newStage.id;
+        showToast(`${cand.name} → ${newStage.name}`);
+      }
+    });
+  }
+
+  // ---------- Candidates grid ----------
+  const candidateGrid = $('#candidateGrid');
+  function renderCandidates(filter='all') {
+    candidateGrid.innerHTML = '';
+    const list = CANDIDATES.filter(c => {
+      if (filter==='all') return true;
+      return c.tags.includes(filter);
+    });
+    if (!list.length) {
+      candidateGrid.innerHTML = '<div class="empty" style="grid-column:1/-1">No candidates match your filters.</div>';
+      return;
+    }
+    list.forEach(c => {
+      const stageObj = STAGES.find(s => s.id===c.stage);
+      const card = document.createElement('div');
+      card.className = 'ccard';
+      card.innerHTML = `
+        <div class="ccard-head">
+          <div class="ava" style="background:${colorFor(c.name)}">${initialsOf(c.name)}</div>
+          <div style="min-width:0;flex:1">
+            <div class="ccard-name">${c.name}</div>
+            <div class="ccard-role">${c.role} · ${c.prop}</div>
+          </div>
+          <div class="score" style="--p:${c.score}"><span>${c.score}</span></div>
+        </div>
+        <div class="ccard-stats">
+          <div class="ccard-stat"><b>${c.yrs}y</b><small>experience</small></div>
+          <div class="ccard-stat"><b>${c.lang.length}</b><small>languages</small></div>
+          <div class="ccard-stat"><b style="color:${stageObj.color}">${stageObj.name}</b><small>stage</small></div>
+        </div>
+        <div class="ccard-tags">
+          ${c.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+          <span class="tag gold">${c.avail}</span>
+        </div>
+      `;
+      card.addEventListener('click', () => showToast('Opening '+c.name+'\'s profile…'));
+      candidateGrid.appendChild(card);
+    });
+  }
+  renderCandidates();
+
+  $$('.filter').forEach(f => {
+    f.addEventListener('click', () => {
+      $$('.filter').forEach(x => x.classList.remove('active'));
+      f.classList.add('active');
+      renderCandidates(f.dataset.filter);
+    });
+  });
+
+  // ---------- Jobs grid ----------
+  const jobsGrid = $('#jobsGrid');
+  JOBS.forEach(j => {
+    const card = document.createElement('div');
+    card.className = 'ccard';
+    card.innerHTML = `
+      <div class="ccard-head">
+        <div class="ava" style="background:${colorFor(j.title)};border-radius:12px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <div style="min-width:0;flex:1">
+          <div class="ccard-name">${j.title}</div>
+          <div class="ccard-role">${j.prop}</div>
+        </div>
+      </div>
+      <div class="ccard-stats">
+        <div class="ccard-stat"><b>${j.shortlist}</b><small>shortlist</small></div>
+        <div class="ccard-stat"><b>${j.days}d</b><small>open</small></div>
+        <div class="ccard-stat"><b style="color:${j.days>14?'var(--bad)':'var(--good)'}">${j.days>14?'overdue':'on track'}</b><small>status</small></div>
+      </div>
+      <div class="ccard-tags">
+        ${j.tags.map(t => `<span class="tag${t==='urgent'?' stale':''}">${t}</span>`).join('')}
+      </div>
+    `;
+    card.addEventListener('click', () => showToast('Opening '+j.title+'…'));
+    jobsGrid.appendChild(card);
+  });
+
+  // ---------- Dropzone ----------
+  const dz = $('#dropzone');
+  ['dragenter','dragover'].forEach(ev =>
+    dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('over'); }));
+  ['dragleave','drop'].forEach(ev =>
+    dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('over'); }));
+  dz.addEventListener('drop', () => showToast('File queued · 312 rows detected'));
+  dz.addEventListener('click', () => showToast('File picker would open here (demo)'));
+
+  // ---------- Top bar buttons ----------
+  $('#exportBtn').addEventListener('click', () => showToast('Exporting dashboard as PDF…'));
+  $('#newRoleBtn').addEventListener('click', () => {
+    $$('.nav-item').forEach(n => n.classList.remove('active'));
+    $('.nav-item[data-view="jobs"]').classList.add('active');
+    $$('.view').forEach(v => v.classList.remove('active'));
+    $('#view-jobs').classList.add('active');
+    showToast('Raising a new requisition…');
+  });
+
+  // ---------- Global search ----------
+  const search = $('#globalSearch');
+  search.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && search.value.trim()) {
+      // jump to candidates view and filter loosely
+      $$('.nav-item').forEach(n => n.classList.remove('active'));
+      $('.nav-item[data-view="candidates"]').classList.add('active');
+      $$('.view').forEach(v => v.classList.remove('active'));
+      $('#view-candidates').classList.add('active');
+      const q = search.value.trim().toLowerCase();
+      candidateGrid.innerHTML = '';
+      const hits = CANDIDATES.filter(c =>
+        c.name.toLowerCase().includes(q) ||
+        c.role.toLowerCase().includes(q) ||
+        c.prop.toLowerCase().includes(q) ||
+        c.lang.join(' ').toLowerCase().includes(q));
+      if (!hits.length) {
+        candidateGrid.innerHTML = '<div class="empty" style="grid-column:1/-1">No matches for "'+search.value+'"</div>';
+      } else {
+        hits.forEach(c => {
+          const stageObj = STAGES.find(s => s.id===c.stage);
+          const card = document.createElement('div');
+          card.className = 'ccard';
+          card.innerHTML = `
+            <div class="ccard-head">
+              <div class="ava" style="background:${colorFor(c.name)}">${initialsOf(c.name)}</div>
+              <div style="min-width:0;flex:1">
+                <div class="ccard-name">${c.name}</div>
+                <div class="ccard-role">${c.role} · ${c.prop}</div>
+              </div>
+              <div class="score" style="--p:${c.score}"><span>${c.score}</span></div>
+            </div>
+            <div class="ccard-stats">
+              <div class="ccard-stat"><b>${c.yrs}y</b><small>experience</small></div>
+              <div class="ccard-stat"><b>${c.lang.length}</b><small>languages</small></div>
+              <div class="ccard-stat"><b style="color:${stageObj.color}">${stageObj.name}</b><small>stage</small></div>
+            </div>
+            <div class="ccard-tags">
+              ${c.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+              <span class="tag gold">${c.avail}</span>
+            </div>
+          `;
+          candidateGrid.appendChild(card);
+        });
+        showToast(hits.length+' match'+(hits.length===1?'':'es')+' for "'+search.value+'"');
+      }
+    }
+  });
+
+  // ⌘K / Ctrl+K to focus search
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      search.focus();
+      search.select();
+    }
+  });
+
+  // ---------- Toast ----------
+  let toastTimer;
+  function showToast(msg) {
+    const t = $('#toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // ---------- Greeting by time-of-day ----------
+  const h = new Date().getHours();
+  const greet = h<12 ? 'Good morning' : h<18 ? 'Good afternoon' : 'Good evening';
+  $('#dashGreeting').textContent = greet + ', Rachel';
+})();
 </script>
 </body>
 </html>
