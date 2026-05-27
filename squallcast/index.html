@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#3aa0ff" />
+<meta name="description" content="Squallcast — the friendly portal for buying and selling secondhand school clothes. Buyer protection on every order." />
+<title>Squallcast · Secondhand School Clothes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9B%85%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+
+<!-- ===== Header ===== -->
+<header class="site-header" id="top">
+  <div class="wrap header-inner">
+    <a class="brand" href="#/browse" aria-label="Squallcast home">
+      <span class="brand-mark" aria-hidden="true">⛅</span>
+      <span class="brand-name">Squall<span>cast</span></span>
+    </a>
+
+    <form class="search" id="search-form" role="search">
+      <input type="search" id="search-input" placeholder="Search blazers, shirts, shoes, schools…" aria-label="Search listings" />
+      <button type="submit" aria-label="Search">🔍</button>
+    </form>
+
+    <nav class="main-nav">
+      <a href="#/browse" data-nav="browse">Browse</a>
+      <a href="#/how" data-nav="how">How it works</a>
+      <button class="btn btn-ghost" id="cart-btn" aria-label="Open cart">
+        🛒 <span class="cart-count" id="cart-count">0</span>
+      </button>
+      <a href="#/sell" class="btn btn-primary" data-nav="sell">+ Sell an item</a>
+    </nav>
+
+    <button class="menu-toggle" id="menu-toggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<main id="app">
+
+  <!-- ===== Browse view ===== -->
+  <section class="view" id="view-browse">
+
+    <div class="hero">
+      <div class="wrap hero-inner">
+        <div class="hero-copy">
+          <span class="badge">☁️ Recycled uniforms, sunny prices</span>
+          <h1>The bright forecast for <span class="hl">secondhand school clothes</span></h1>
+          <p>Squallcast is the friendly marketplace where families pass uniforms on to the next kid. Outgrown a blazer? List it. Need a bigger size? Grab a bargain — with buyer protection on every order.</p>
+          <div class="hero-cta">
+            <a href="#/sell" class="btn btn-primary btn-lg">Start selling</a>
+            <a href="#browse-grid" class="btn btn-soft btn-lg">Shop uniforms</a>
+          </div>
+          <div class="trust-row">
+            <span>🛡️ R10 Buyer Protection</span>
+            <span>💸 Just 7% commission</span>
+            <span>♻️ Kinder on the planet</span>
+          </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="cloud c1">☁️</div>
+          <div class="cloud c2">☁️</div>
+          <div class="sun">🌤️</div>
+          <div class="rack">
+            <span>🧥</span><span>👕</span><span>👗</span><span>👟</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <div class="filters" id="filters">
+        <div class="filter-group" id="filter-category" data-filter="category"></div>
+        <div class="filter-group" id="filter-school" data-filter="school"></div>
+        <div class="filter-group" id="filter-size" data-filter="size"></div>
+      </div>
+
+      <div class="grid-head">
+        <h2 id="grid-title">All listings</h2>
+        <div class="grid-tools">
+          <label for="sort">Sort</label>
+          <select id="sort">
+            <option value="new">Newest</option>
+            <option value="low">Price: low to high</option>
+            <option value="high">Price: high to low</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="product-grid" id="browse-grid"></div>
+      <p class="empty" id="empty-state" hidden>No listings match your search just yet — try clearing a filter, or be the first to <a href="#/sell">list one</a>! ⛅</p>
+    </div>
+  </section>
+
+  <!-- ===== Sell view ===== -->
+  <section class="view" id="view-sell" hidden>
+    <div class="wrap narrow">
+      <div class="page-head">
+        <h1>List your school clothes ⛅</h1>
+        <p>Snap, describe, price — and let the next family find it. You set the price; buyers cover the small fees.</p>
+      </div>
+
+      <form id="sell-form" class="card form-card" novalidate>
+        <div class="field">
+          <label for="f-title">What are you selling? <span class="req">*</span></label>
+          <input id="f-title" name="title" required maxlength="60" placeholder="e.g. Navy winter blazer, barely worn" />
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="f-category">Item type <span class="req">*</span></label>
+            <select id="f-category" name="category" required></select>
+          </div>
+          <div class="field">
+            <label for="f-size">Size <span class="req">*</span></label>
+            <input id="f-size" name="size" required placeholder="e.g. Age 10 / 32 / M" />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="f-school">School</label>
+            <input id="f-school" name="school" list="school-list" placeholder="e.g. Riverside Primary" />
+            <datalist id="school-list"></datalist>
+          </div>
+          <div class="field">
+            <label for="f-condition">Condition <span class="req">*</span></label>
+            <select id="f-condition" name="condition" required>
+              <option value="">Choose…</option>
+              <option>Brand new with tags</option>
+              <option>Excellent</option>
+              <option>Good</option>
+              <option>Well loved</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-price">Your price (R) <span class="req">*</span></label>
+          <input id="f-price" name="price" type="number" min="1" step="1" required placeholder="120" />
+          <p class="hint" id="payout-hint">You'll receive your full asking price. Buyers pay a R10 buyer protection fee and 7% commission on top.</p>
+        </div>
+
+        <div class="field">
+          <label>Pick a cover <span class="req">*</span></label>
+          <div class="emoji-picker" id="emoji-picker"></div>
+        </div>
+
+        <div class="field">
+          <label for="f-desc">Description</label>
+          <textarea id="f-desc" name="description" rows="3" maxlength="280" placeholder="Tell buyers about fabric, fit, any marks, and why you loved it."></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary btn-lg">Publish listing</button>
+          <span class="form-msg" id="sell-msg" role="status"></span>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== How it works view ===== -->
+  <section class="view" id="view-how" hidden>
+    <div class="wrap narrow">
+      <div class="page-head">
+        <h1>How Squallcast works ☁️</h1>
+        <p>Buying and selling preloved uniforms, made simple and safe.</p>
+      </div>
+
+      <div class="steps">
+        <div class="card step"><span class="step-emoji">📸</span><h3>1. List it free</h3><p>Sellers post their outgrown uniforms in minutes. Listing is always free.</p></div>
+        <div class="card step"><span class="step-emoji">🛒</span><h3>2. Buy with cover</h3><p>Buyers checkout with R10 Buyer Protection so every order is backed.</p></div>
+        <div class="card step"><span class="step-emoji">🤝</span><h3>3. Everyone wins</h3><p>The next kid gets kitted out, sellers earn, and less ends up in landfill.</p></div>
+      </div>
+
+      <div class="card fees-card">
+        <h2>The fees, in plain weather-speak</h2>
+        <ul class="fees-list">
+          <li><strong>Sellers list for free.</strong> You keep 100% of the price you set.</li>
+          <li><strong>🛡️ R10 Buyer Protection.</strong> A flat R10 added at checkout that backs the buyer if an order goes wrong.</li>
+          <li><strong>💸 7% commission.</strong> Buyers pay Squallcast a 7% service fee on the item price — that's how we keep the clouds running.</li>
+        </ul>
+        <div class="fee-example" id="fee-example"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== Product modal ===== -->
+<div class="modal-backdrop" id="modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-title">
+    <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ===== Cart drawer ===== -->
+<div class="drawer-backdrop" id="cart-drawer" hidden>
+  <aside class="drawer" role="dialog" aria-modal="true" aria-label="Your cart">
+    <div class="drawer-head">
+      <h2>Your cart 🛒</h2>
+      <button class="modal-close" id="cart-close" aria-label="Close cart">✕</button>
+    </div>
+    <div class="drawer-body" id="cart-body"></div>
+  </aside>
+</div>
+
+<!-- ===== Toast ===== -->
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<!-- ===== Footer ===== -->
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <span class="brand-mark">⛅</span>
+      <div>
+        <strong>Squallcast</strong>
+        <p>Secondhand school clothes, sunny-side up.</p>
+      </div>
+    </div>
+    <div class="footer-cols">
+      <div><h4>Marketplace</h4><a href="#/browse">Browse</a><a href="#/sell">Sell an item</a><a href="#/how">How it works</a></div>
+      <div><h4>Trust</h4><a href="#/how">Buyer Protection</a><a href="#/how">Fees &amp; commission</a></div>
+    </div>
+  </div>
+  <p class="footer-fine">⛅ Squallcast is a demo marketplace. Listings are stored only in your browser. Prices in South African Rand (R).</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
