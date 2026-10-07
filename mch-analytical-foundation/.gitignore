@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+# The plan workbook and the scripts that generate it live in private storage (DEC-AF-12), never in git
+*.xlsx
+build_workbook.py
+content_*.py
