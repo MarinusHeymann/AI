@@ -6,3 +6,6 @@ build_workbook.py
 build_plans.py
 content_*.py
 plans/
+foundation_ref/
+LAPTOP_HANDOVER.md
+orchestrator_payload.json
